@@ -1,7 +1,9 @@
 import core.Tuple
+import core.Tuple.Companion.color
 import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import kotlin.math.sqrt
@@ -11,7 +13,7 @@ class TupleTest {
     @Test
     fun `A Tuple with w = 1,0 is a point`() {
         val a = Tuple(4.3, -4.2, 3.1, 1.0)
-        assertAll (
+        assertAll(
             Executable { assertEquals(4.3, a.x) },
             Executable { assertEquals(-4.2, a.y) },
             Executable { assertEquals(3.1, a.z) },
@@ -24,7 +26,7 @@ class TupleTest {
     @Test
     fun `A Tuple with w = 0,0 is a vector`() {
         val a = Tuple(4.3, -4.2, 3.1, 0.0)
-        assertAll (
+        assertAll(
             Executable { assertEquals(4.3, a.x) },
             Executable { assertEquals(-4.2, a.y) },
             Executable { assertEquals(3.1, a.z) },
@@ -49,7 +51,7 @@ class TupleTest {
     @Test
     fun `Adding two tuples`() {
         val a1 = Tuple(3.0, -2.0, 5.0, 1.0)
-        val a2= Tuple(-2.0, 3.0, 1.0, 0.0)
+        val a2 = Tuple(-2.0, 3.0, 1.0, 0.0)
 
         assertEquals(Tuple(1.0, 1.0, 6.0, 1.0), a1 + a2)
     }
@@ -120,24 +122,28 @@ class TupleTest {
 
         assertEquals(1.0, v.magnitude())
     }
+
     @Test
     fun `Computing the magnitude of vector(0, 1, 0)`() {
         val v = vector(1.0, 0.0, 0.0)
 
         assertEquals(1.0, v.magnitude())
     }
+
     @Test
     fun `Computing the magnitude of vector(0, 0, 1)`() {
         val v = vector(0.0, 0.0, 1.0)
 
         assertEquals(1.0, v.magnitude())
     }
+
     @Test
     fun `Computing the magnitude of vector(1, 2, 3)`() {
         val v = vector(1.0, 2.0, 3.0)
 
         assertEquals(sqrt(14.0), v.magnitude())
     }
+
     @Test
     fun `Computing the magnitude of vector(-1, -2, -3)`() {
         val v = vector(-1.0, -2.0, -3.0)
@@ -156,7 +162,7 @@ class TupleTest {
     fun `Normalizing vector(1, 2, 3)`() {
         val v = vector(1.0, 2.0, 3.0)
 
-        assertEquals(vector(1/sqrt(14.0), 2/sqrt(14.0), 3/sqrt(14.0)), v.normalize())
+        assertEquals(vector(1 / sqrt(14.0), 2 / sqrt(14.0), 3 / sqrt(14.0)), v.normalize())
     }
 
     @Test
@@ -183,6 +189,47 @@ class TupleTest {
             Executable { assertEquals(vector(-1.0, 2.0, -1.0), a.cross(b)) },
             Executable { assertEquals(vector(1.0, -2.0, 1.0), b.cross(a)) }
         )
-
     }
+
+    @Test
+    fun `Colors are (red, green, blue) tuples`() {
+        val c = color(-0.5, 0.4, 1.7)
+        assertAll(
+            Executable { assertEquals(-0.5, c.red) },
+            Executable { assertEquals(0.4, c.green) },
+            Executable { assertEquals(1.7, c.blue) }
+        )
+    }
+
+    @Test
+    fun `Adding colors`() {
+        val c1 = color(0.9, 0.6, .75)
+        val c2 = color(0.7, 0.1, .25)
+
+        assertEquals(color(1.6, 0.7, 1.0), c1 + c2)
+    }
+
+    @Test
+    fun `Subtracting colors`() {
+        val c1 = color(0.9, 0.6, .75)
+        val c2 = color(0.7, 0.1, .25)
+
+        assertEquals(color(0.2, 0.5, 0.5), c1 - c2)
+    }
+
+    @Test
+    fun `Multiplying a color by a scalar`() {
+        val c1 = color(0.2, 0.3, .4)
+
+        assertEquals(color(0.4, 0.6, .8), c1 * 2.0)
+    }
+
+    @Test
+    fun `Multiplying colors`() {
+        val c1 = color(1.0, 0.2, .4)
+        val c2 = color(0.9, 1.0, .1)
+
+        assertEquals(color(.9, 0.2, .04), c1 * c2)
+    }
+
 }
