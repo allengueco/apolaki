@@ -4,10 +4,10 @@ import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import kotlin.math.sqrt
-import kotlin.test.assertTrue
 
 class TupleTest {
     @Test
