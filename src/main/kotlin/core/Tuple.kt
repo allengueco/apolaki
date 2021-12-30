@@ -23,15 +23,15 @@ data class Tuple(
         fun vector(x: Int, y: Int, z: Int) = Tuple(x, y, z, 0)
     }
 
-    operator fun plus(other: Tuple) = zipWith(other, Double::plus)
-
-    operator fun minus(other: Tuple) = zipWith(other, Double::minus)
 
     /**
      * Helper function that applies `f` to the elements. Useful for operator overloads
      */
     private fun mapTuple(f: (Double) -> Double): Tuple = Tuple(f(this.x), f(this.y), f(this.z), f(this.w))
 
+    /**
+     * Helper function that applies an element-wise function `f` of `this` and `other`
+     */
     private fun zipWith(other: Tuple, f: (Double, Double) -> Double): Tuple =
         Tuple(
             f(this.x, other.x),
@@ -41,6 +41,10 @@ data class Tuple(
         )
 
     operator fun unaryMinus() = mapTuple { -it }
+
+    operator fun plus(other: Tuple) = zipWith(other, Double::plus)
+
+    operator fun minus(other: Tuple) = zipWith(other, Double::minus)
 
     operator fun times(scalar: Double) = mapTuple { it * scalar }
 
