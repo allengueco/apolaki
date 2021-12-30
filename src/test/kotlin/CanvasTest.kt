@@ -1,6 +1,6 @@
+import core.Canvas
 import core.Tuple.Companion.color
-import org.junit.jupiter.api.Assertions.assertAll
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import kotlin.test.assertEquals
@@ -13,7 +13,7 @@ class CanvasTest {
         assertAll(
             Executable { assertEquals(10, c.width) },
             Executable { assertEquals(20, c.height) },
-            Executable { assertTrue(c.pixels.all { it == color(0, 0, 0) }) }
+            Executable { assertTrue(c.pixels().all { it == color(0, 0, 0) }) }
         )
     }
 
@@ -24,15 +24,15 @@ class CanvasTest {
 
         c[2, 3] = red
 
-        assertEqual(red, c[2, 3])
+        assertEquals(red, c[2, 3])
     }
 
     @Test
     fun `Constructing the PPM header`() {
         val c = Canvas(5, 3)
-        val lines = c.ppm()
+        val lines = c.ppm().split("\n")
 
-        assertEquals(listOf("P3", "5 3", "255"), c.ppm().take(3))
+        assertEquals("P3\n5 3\n255\n", lines.take(3).joinToString("\n", postfix = "\n"))
     }
 
     @Test
@@ -47,13 +47,12 @@ class CanvasTest {
         c[4, 2] = c3
 
         val expectedLines = """
-                255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
-                153 255 204 153 255 204 153 255 204 153 255 204 153
-                255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
-                153 255 204 153 255 204 153 255 204 153 255 204 153    
+                255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
+                0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
         """.trimIndent()
 
-        val lines = c.ppm().drop(3)
+        val lines = c.ppm().split("\n").drop(3).take(3)
 
         assertEquals(expectedLines.split("\n"), lines)
     }
