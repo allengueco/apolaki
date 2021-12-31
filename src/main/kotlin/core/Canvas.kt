@@ -3,10 +3,14 @@ package core
 import core.Tuple.Companion.color
 
 class Canvas(val width: Int, val height: Int) {
-    private val pixels = MutableList(height) { MutableList(width) { color(0, 0, 0) } }
+    var pixels = MutableList(height) { MutableList(width) { color(0, 0, 0) } }
     operator fun get(x: Int, y: Int) = pixels[y][x]
     operator fun set(x: Int, y: Int, color: Tuple) {
         pixels[y][x] = color
+    }
+
+    constructor(width: Int, height: Int, init: Tuple) : this(width, height) {
+        pixels = pixels.map { row -> row.map { init }.toMutableList() }.toMutableList()
     }
 
     private fun ppmHeader() = "P3\n$width $height\n255\n"
@@ -18,14 +22,7 @@ class Canvas(val width: Int, val height: Int) {
         .joinToString(" ")
 
     private fun ppmPixelData(): String {
-        return pixels.joinToString("\n") { row -> row.joinToString(" ") { c -> ppmColor(c) } }
-    }
-
-    private fun clamp(value: Int, range: IntRange = 0..255): Int {
-        return when (value) {
-            in range -> value
-            else -> if (value < range.first) range.first else range.last
-        }
+        return pixels().joinToString("\n") { c -> ppmColor(c)}
     }
 
     private fun clamp(value: Double, min: Double, max: Double): Double {

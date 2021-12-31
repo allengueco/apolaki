@@ -47,14 +47,32 @@ class CanvasTest {
         c[4, 2] = c3
 
         val expectedLines = """
-                255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-                0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
-                0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
+                255 0 0
+                0 0 0
+                0 0 0
+                0 0 0
+                0 0 0
+                0 0 0
+                0 0 0
+                0 128 0
+                0 0 0
+                0 0 0
+                0 0 0
+                0 0 0
+                0 0 0
+                0 0 0
+                0 0 255
         """.trimIndent()
 
-        val lines = c.ppm().split("\n").drop(3).take(3)
+        val lines = c.ppm().split("\n").drop(3)
 
-        assertEquals(expectedLines.split("\n"), lines)
+        assertEquals(expectedLines.split("\n"), lines.subList(0, lines.lastIndex))
+    }
+
+    @Test
+    fun `Splitting long lines in PPM files`() {
+        println("Putting each color in a new line - no need to split lines")
+        assertTrue(true)
     }
 
     @Test
