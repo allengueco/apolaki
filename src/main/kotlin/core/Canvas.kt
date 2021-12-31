@@ -1,11 +1,13 @@
 package core
 
 import core.Tuple.Companion.color
+import java.io.File
 
 class Canvas(val width: Int, val height: Int) {
     var pixels = MutableList(height) { MutableList(width) { color(0, 0, 0) } }
     operator fun get(x: Int, y: Int) = pixels[y][x]
     operator fun set(x: Int, y: Int, color: Tuple) {
+        if (y !in 0..height || x !in 0..width) return
         pixels[y][x] = color
     }
 
@@ -35,4 +37,9 @@ class Canvas(val width: Int, val height: Int) {
     fun ppm() = ppmHeader() + ppmPixelData() + "\n"
 
     fun pixels() = pixels.flatten()
+
+    fun saveCanvasToFile(fileName: String) {
+        File(fileName).createNewFile()
+        File(fileName).writeText(ppm())
+    }
 }

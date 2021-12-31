@@ -1,3 +1,5 @@
+**/*.ppm
+
 # Project exclude paths
 /target/
 

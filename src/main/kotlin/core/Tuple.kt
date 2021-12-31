@@ -113,4 +113,8 @@ data class Tuple(
     }
 }
 
+typealias Color = Tuple
+typealias Vector = Tuple
+typealias Point = Tuple
+
 
