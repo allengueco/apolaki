@@ -1,14 +1,14 @@
 package core
 
-import kotlin.math.abs
 import kotlin.math.sqrt
+import Utils.Companion.equals
 
 data class Tuple(
     val x: Double,
     val y: Double,
     val z: Double,
     val w: Double
-) {
+) : Iterable<Double> {
     val red get() = this.x
     val green get() = this.y
     val blue get() = this.z
@@ -34,7 +34,6 @@ data class Tuple(
         fun color(x: Int, y: Int, z: Int) = vector(x, y, z)
 
     }
-
 
     /**
      * Helper function that applies `f` to the elements. Useful for operator overloads
@@ -89,17 +88,16 @@ data class Tuple(
     )
 
     override fun equals(other: Any?): Boolean {
-        val epsilon = .0000001
-        fun equal(a: Double, b: Double) = abs(a - b) < epsilon
+
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
         other as Tuple
 
-        if (!equal(x, other.x)) return false
-        if (!equal(y, other.y)) return false
-        if (!equal(z, other.z)) return false
-        if (!equal(w, other.w)) return false
+        if (!equals(x, other.x)) return false
+        if (!equals(y, other.y)) return false
+        if (!equals(z, other.z)) return false
+        if (!equals(w, other.w)) return false
 
         return true
     }
@@ -110,6 +108,10 @@ data class Tuple(
         result = 31 * result + z.hashCode()
         result = 31 * result + w.hashCode()
         return result
+    }
+
+    override fun iterator(): Iterator<Double> {
+        return listOf(this.x, this.y, this.z, this.w).iterator()
     }
 }
 

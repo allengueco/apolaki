@@ -1,11 +1,12 @@
-import core.Canvas
+package core
+
 import core.Tuple.Companion.color
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import kotlin.test.assertEquals
 
-class CanvasTest {
+internal class CanvasTest {
     @Test
     fun `Creating a canvas`() {
         val c = Canvas(10, 20)

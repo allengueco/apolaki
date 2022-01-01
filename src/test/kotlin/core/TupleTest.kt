@@ -1,4 +1,5 @@
-import core.Tuple
+package core
+
 import core.Tuple.Companion.color
 import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import kotlin.math.sqrt
 
-class TupleTest {
+internal class TupleTest {
     @Test
     fun `A Tuple with w = 1,0 is a point`() {
         val a = Tuple(4.3, -4.2, 3.1, 1.0)
