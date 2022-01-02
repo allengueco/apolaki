@@ -70,8 +70,8 @@ class MatrixTransformationTest {
     @Test
     fun `Rotating a point around the x axis`() {
         val p = Tuple.point(0, 1, 0)
-        val halfQuarter = Matrix.rotation_x(PI / 4)
-        val fullQuarter = Matrix.rotation_x(PI / 2)
+        val halfQuarter = Matrix.rotationX(PI / 4)
+        val fullQuarter = Matrix.rotationX(PI / 2)
 
         assertAll(
             { assertEquals(Tuple.point(0.0, sqrt(2.0)/2, sqrt(2.0)/2), halfQuarter * p) },
@@ -82,7 +82,7 @@ class MatrixTransformationTest {
     @Test
     fun `The inverse of an x-rotation rotates in the opposite direction`() {
         val p = Tuple.point(0, 1, 0)
-        val halfQuarter = Matrix.rotation_x(PI / 4)
+        val halfQuarter = Matrix.rotationX(PI / 4)
         val inv = halfQuarter.inverse()
 
         assertEquals(Tuple.point(0.0, sqrt(2.0)/2, -sqrt(2.0)/2), inv * p)
@@ -91,8 +91,8 @@ class MatrixTransformationTest {
     @Test
     fun `Rotating a point around the y axis`() {
         val p = Tuple.point(0, 0, 1)
-        val halfQuarter = Matrix.rotation_y(PI / 4)
-        val fullQuarter = Matrix.rotation_y(PI / 2)
+        val halfQuarter = Matrix.rotationY(PI / 4)
+        val fullQuarter = Matrix.rotationY(PI / 2)
 
         assertAll(
             { assertEquals(Tuple.point(sqrt(2.0)/2, 0.0, sqrt(2.0)/2), halfQuarter * p) },
@@ -103,12 +103,99 @@ class MatrixTransformationTest {
     @Test
     fun `Rotating a point around the z axis`() {
         val p = Tuple.point(0, 1, 0)
-        val halfQuarter = Matrix.rotation_z(PI / 4)
-        val fullQuarter = Matrix.rotation_z(PI / 2)
+        val halfQuarter = Matrix.rotationZ(PI / 4)
+        val fullQuarter = Matrix.rotationZ(PI / 2)
 
         assertAll(
             { assertEquals(Tuple.point(-sqrt(2.0)/2, sqrt(2.0)/2, 0.0), halfQuarter * p) },
             { assertEquals(Tuple.point(-1, 0, 0), fullQuarter * p) }
         )
+    }
+
+    @Test
+    fun `A shearing transformation moves x in proportion to y`() {
+        val transform = Matrix.shearing(1 to 0, 0 to 0, 0 to 0)
+        val p = Tuple.point(2, 3, 4)
+
+        assertEquals(Tuple.point(5, 3, 4), transform * p)
+    }
+
+    @Test
+    fun `A shearing transformation moves x in proportion to z`() {
+        val transform = Matrix.shearing(0 to 1, 0 to 0, 0 to 0)
+        val p = Tuple.point(2, 3, 4)
+
+        assertEquals(Tuple.point(6, 3, 4), transform * p)
+    }
+
+    @Test
+    fun `A shearing transformation moves y in proportion to x`() {
+        val transform = Matrix.shearing(0 to 0, 1 to 0, 0 to 0)
+        val p = Tuple.point(2, 3, 4)
+
+        assertEquals(Tuple.point(2, 5, 4), transform * p)
+    }
+
+    @Test
+    fun `A shearing transformation moves y in proportion to z`() {
+        val transform = Matrix.shearing(0 to 0, 0 to 1, 0 to 0)
+        val p = Tuple.point(2, 3, 4)
+
+        assertEquals(Tuple.point(2, 7, 4), transform * p)
+    }
+
+    @Test
+    fun `A shearing transformation moves z in proportion to x`() {
+        val transform = Matrix.shearing(0 to 0, 0 to 0, 1 to 0)
+        val p = Tuple.point(2, 3, 4)
+
+        assertEquals(Tuple.point(2, 3, 6), transform * p)
+    }
+
+    @Test
+    fun `A shearing transformation moves z in proportion to y`() {
+        val transform = Matrix.shearing(0 to 0, 0 to 0, 0 to 1)
+        val p = Tuple.point(2, 3, 4)
+
+        assertEquals(Tuple.point(2, 3, 7), transform * p)
+    }
+
+    @Test
+    fun `Individual transformations are applied in sequence`() {
+        val p = Tuple.point(1, 0, 1)
+        val A = Matrix.rotationX(PI / 2)
+        val B = Matrix.scaling(5, 5, 5)
+        val C = Matrix.translation(10, 5, 7)
+
+        val p2 = A * p
+        assertEquals(Tuple.point(1, -1, 0), p2)
+
+        val p3 = B * p2
+        assertEquals(Tuple.point(5, -5, 0), p3)
+
+        val p4 = C * p3
+        assertEquals(Tuple.point(15, 0, 7), p4)
+    }
+
+    @Test
+    fun `Chained transformations must be applied in reverse order`() {
+        val p = Tuple.point(1, 0, 1)
+        val A = Matrix.rotationX(PI / 2)
+        val B = Matrix.scaling(5, 5, 5)
+        val C = Matrix.translation(10, 5, 7)
+
+        val T = C * B * A
+        assertEquals(Tuple.point(15, 0, 7), T * p)
+
+        val transform = Matrix.identity()
+            .rotateX(PI / 2)
+            .scale(5, 5, 5)
+            .translate(10, 5, 7)
+        assertEquals(Tuple.point(15, 0, 7), transform * p)
+
+        val transformPipe = Matrix.identity().pipe(
+            A, B, C
+        )
+        assertEquals(Tuple.point(15, 0, 7), transformPipe * p)
     }
 }

@@ -1,36 +1,37 @@
 package core
 
+import Utils
 import kotlin.math.cos
 import kotlin.math.sin
 
 
-class Matrix(init: () -> MutableList<MutableList<Double>>) {
-    class Row(val idx: Int)
-    class Col(val idx: Int)
+class Matrix(init: () -> List<List<Double>>) {
+    class Row(val row: Int)
+    class Col(val col: Int)
     class Submatrix(val row: Int, val col: Int)
     class Minor(val row: Int, val col: Int)
     class Cofactor(val row: Int, val col: Int)
 
 
     private val elements by lazy { init() }
-    val numRows get() = elements[0].size
-    val numCols get() = elements.size
-    val invertible get() = determinant != 0.0
+    private val numRows get() = elements[0].size
+    private val numCols get() = elements.size
+    val invertible: Boolean by lazy { determinant != 0.0 }
     val determinant: Double by lazy { determinant() }
 
-    operator fun get(index: Row): MutableList<Double> {
-        return elements[index.idx]
+    operator fun get(index: Row): List<Double> {
+        return elements[index.row]
     }
 
-    operator fun get(index: Col): MutableList<Double> {
-        return elements.map { elems -> elems[index.idx] }.toMutableList()
+    operator fun get(index: Col): List<Double> {
+        return elements.map { elems -> elems[index.col] }
     }
 
     operator fun get(index: Submatrix): Matrix {
         return Matrix {
             elements
                 .filterIndexed { rowIdx, _ -> rowIdx != index.row }
-                .map { row -> row.filterIndexed { colIdx, _ -> colIdx != index.col }.toMutableList() }.toMutableList()
+                .map { row -> row.filterIndexed { colIdx, _ -> colIdx != index.col } }
         }
     }
 
@@ -45,17 +46,17 @@ class Matrix(init: () -> MutableList<MutableList<Double>>) {
 
     operator fun get(x: Int, y: Int) = elements[x][y]
 
-    operator fun set(x: Int, y: Int, new: Double) {
-        elements[x][y] = new
-    }
+//    operator fun set(x: Int, y: Int, new: Double) {
+//        elements[x][y] = new
+//    }
 
     /**
      * Matrix * Matrix = Matrix
      */
     operator fun times(other: Matrix): Matrix {
         return Matrix {
-            MutableList(numRows) { r ->
-                MutableList(numCols) { c ->
+            List(numRows) { r ->
+                List(numCols) { c ->
                     this[Row(r)].zip(other[Col(c)]).sumOf { it.first * it.second }
                 }
             }
@@ -74,11 +75,6 @@ class Matrix(init: () -> MutableList<MutableList<Double>>) {
         )
     }
 
-    fun transpose(): Matrix {
-        return Matrix {
-            MutableList(elements.size) { idx -> this[Col(idx)] }
-        }
-    }
 
     override fun toString(): String {
         val formatTemplate = "% 9.3f "
@@ -120,31 +116,58 @@ class Matrix(init: () -> MutableList<MutableList<Double>>) {
     fun inverse(): Matrix {
         if (!this.invertible) throw Exception("Matrix is not invertible")
         return Matrix {
-            MutableList(numRows) { r ->
-                MutableList(numCols) { c ->
-                    this[Cofactor(c, r)] / determinant
+            List(numRows) { r ->
+                List(numCols) { c ->
+                    this[Cofactor(c, r)] / determinant // (c, r) because it needs to be transposed
                 }
             }
         }
     }
 
+    fun transpose(): Matrix {
+        return Matrix {
+            List(elements.size) { idx -> this[Col(idx)] }
+        }
+    }
+
+    fun translate(x: Number, y: Number, z: Number) =
+        translation(x.toDouble(), y.toDouble(), z.toDouble()) * this
+
+    fun scale(x: Number, y: Number, z: Number) =
+        scaling(x.toDouble(), y.toDouble(), z.toDouble()) * this
+
+    fun rotateX(radians: Number) = rotationX(radians.toDouble()) * this
+
+    fun rotateY(radians: Number) = rotationY(radians.toDouble()) * this
+
+    fun rotateZ(radians: Number) = rotationZ(radians.toDouble()) * this
+
+    fun shear(x: Pair<Number, Number>, y: Pair<Number, Number>, z: Pair<Number, Number>) =
+        shearing(x, y, z) * this
+
+    fun pipe(vararg transform: Matrix) = transform.fold(this) { acc, tr -> tr * acc }
 
     companion object {
-        fun identity(numRows: Int = 4, numCols: Int = 4) = Matrix {
+        private fun identityList(numRows: Int = 4, numCols: Int = 4) =
             MutableList(numRows) { r ->
                 MutableList(numCols) { c ->
                     if (r == c) 1.0 else 0.0
                 }
             }
+
+        fun identity(numRows: Int = 4, numCols: Int = 4) = Matrix {
+            identityList(numRows, numCols).map {
+                it.toMutableList()
+            }.toMutableList()
         }
 
         fun translation(x: Double, y: Double, z: Double): Matrix {
-            val identity = identity()
-            identity[0, 3] = x
-            identity[1, 3] = y
-            identity[2, 3] = z
+            val identity = identityList()
+            identity[0][3] = x
+            identity[1][3] = y
+            identity[2][3] = z
 
-            return identity
+            return identity.toMatrix()
         }
 
         fun translation(x: Int, y: Int, z: Int) =
@@ -154,42 +177,60 @@ class Matrix(init: () -> MutableList<MutableList<Double>>) {
             scaling(x.toDouble(), y.toDouble(), z.toDouble())
 
         fun scaling(x: Double, y: Double, z: Double): Matrix {
-            val identity = identity()
-            identity[0, 0] = x
-            identity[1, 1] = y
-            identity[2, 2] = z
+            val identity = identityList()
+            identity[0][0] = x
+            identity[1][1] = y
+            identity[2][2] = z
 
-            return identity
+            return identity.toMatrix()
         }
 
-        fun rotation_x(radians: Double): Matrix {
-            val identity = identity()
-            identity[1, 1] = cos(radians)
-            identity[1, 2] = -sin(radians)
-            identity[2, 1] = sin(radians)
-            identity[2, 2] = cos(radians)
+        fun rotationX(radians: Double): Matrix {
+            val identity = identityList()
+            identity[1][1] = cos(radians)
+            identity[1][2] = -sin(radians)
+            identity[2][1] = sin(radians)
+            identity[2][2] = cos(radians)
 
-            return identity
+            return identity.toMatrix()
         }
 
-        fun rotation_y(radians: Double): Matrix {
-            val identity = identity()
-            identity[0, 0] = cos(radians)
-            identity[0, 2] = sin(radians)
-            identity[2, 0] = -sin(radians)
-            identity[2, 2] = cos(radians)
+        fun rotationY(radians: Double): Matrix {
+            val identity = identityList()
+            identity[0][0] = cos(radians)
+            identity[0][2] = sin(radians)
+            identity[2][0] = -sin(radians)
+            identity[2][2] = cos(radians)
 
-            return identity
+            return identity.toMatrix()
         }
 
-        fun rotation_z(radians: Double): Matrix {
-            val identity = identity()
-            identity[0, 0] = cos(radians)
-            identity[0, 1] = -sin(radians)
-            identity[1, 0] = sin(radians)
-            identity[1, 1] = cos(radians)
+        fun rotationZ(radians: Double): Matrix {
+            val identity = identityList()
+            identity[0][0] = cos(radians)
+            identity[0][1] = -sin(radians)
+            identity[1][0] = sin(radians)
+            identity[1][1] = cos(radians)
+            return identity.toMatrix()
+        }
 
+        fun shearing(x: Pair<Number, Number>, y: Pair<Number, Number>, z: Pair<Number, Number>): Matrix {
+            val identity = identityList()
             return identity
+                .apply {
+                    this[0][1] = x.first.toDouble()
+                    this[0][2] = x.second.toDouble()
+                }
+                .apply {
+                    this[1][0] = y.first.toDouble()
+                    this[1][2] = y.second.toDouble()
+                }
+                .apply {
+                    this[2][0] = z.first.toDouble()
+                    this[2][1] = z.second.toDouble()
+                }
+                .toMatrix()
         }
     }
 }
+fun List<List<Double>>.toMatrix() = Matrix { this }
