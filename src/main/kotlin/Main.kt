@@ -1,11 +1,14 @@
-import core.*
-import core.Tuple.*
+import core.Canvas
+import core.Matrix
+import core.Point
 import core.Tuple.Companion.color
-import core.Tuple.Companion.vector
 import core.Tuple.Companion.point
+import core.Tuple.Companion.vector
+import core.Vector
+import kotlin.math.PI
 
 fun main(args: Array<String>) {
-    `Putting It Together Ch2`()
+    `Putting It Together Ch4`()
 }
 
 fun `Putting It Together Ch1`() {
@@ -59,4 +62,28 @@ fun `Putting It Together Ch2`() {
     canvas.saveCanvasToFile("pit_ch2.ppm")
 
 
+}
+
+fun `Putting It Together Ch4`() {
+    data class Circle(val radius: Double)
+
+    val canvas = Canvas(250, 250, color(0, 0, 0))
+
+    fun Canvas.drawClock() {
+        val circle = Circle(3.0 / 8.0 * this.width.toDouble())
+        val center = point(this.width / 2.0, 0.0, this.height / 2.0)
+        fun getHourTransform(hour: Int) = Matrix.rotationY(hour * PI / 6)
+
+        val twelve = point(0, 0, 1)
+        (0..12).forEach { hour ->
+            var hourPoint = getHourTransform(hour) * twelve
+            hourPoint *= point(circle.radius, 1.0, circle.radius)
+            hourPoint += point(center.x, 0.0, center.z)
+            val (x, y) = (hourPoint.x to hourPoint.z)
+            this[x.toInt(), y.toInt()] = color(1, 0, 0)
+        }
+    }
+
+    canvas.drawClock()
+    canvas.saveCanvasToFile("pit_ch4.ppm")
 }
