@@ -1,14 +1,11 @@
 package core
 
-class Intersection<T>(val t: Number, val obj: T)
+class Intersection(val t: Number, val obj: Object)
 
-/**
- * TODO: This might be a problem when the intersections are all different objects. Maybe introduce generics?
- */
-typealias Intersections<T> = List<Intersection<T>>
+typealias Intersections = List<Intersection>
 
-fun <T> Intersections<T>.count() = this.size
+fun Intersections.count() = this.size
 
-fun <T> Intersections<T>.hit() = this.filter { it.t.toDouble() > 0 }
+fun Intersections.hit() = this.filter { it.t.toDouble() > 0 }
     .minByOrNull { it.t.toDouble() }
 

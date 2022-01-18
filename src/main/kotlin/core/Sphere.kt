@@ -4,8 +4,10 @@ import core.Tuple.Companion.point
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Sphere(val radius: Number) : Object<Sphere> {
-    override fun intersect(ray: Ray): Intersections<Sphere>? {
+class Sphere(val radius: Number) : Object {
+    var transform = Matrix.identity()
+    override fun intersect(ray: Ray): Intersections? {
+        val ray = ray.transform(transform.inverse())
         val sphereToRay = ray.origin - point(0, 0, 0)
 
         val a = ray.dir.dot(ray.dir)

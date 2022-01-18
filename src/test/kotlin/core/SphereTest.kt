@@ -22,6 +22,7 @@ internal class SphereTest {
 
         assertAll(
             { assertNotNull(xs) },
+            { assertEquals(2, xs!!.count()) },
             { assertEquals(sphere, xs!![0].obj) },
             { assertEquals(sphere, xs!![1].obj) }
         )
@@ -35,6 +36,7 @@ internal class SphereTest {
 
         assertAll(
             { assertNotNull(xs) },
+            { assertEquals(2, xs!!.count()) },
             { assertEquals(sphere, xs!![0].obj) },
             { assertEquals(sphere, xs!![1].obj) }
         )
@@ -59,6 +61,7 @@ internal class SphereTest {
 
         assertAll(
             { assertNotNull(xs) },
+            { assertEquals(2, xs!!.count()) },
             { assertEquals(sphere, xs!![0].obj) },
             { assertEquals(sphere, xs!![1].obj) }
         )
@@ -73,8 +76,53 @@ internal class SphereTest {
 
         assertAll(
             { assertNotNull(xs) },
+            { assertEquals(2, xs!!.count()) },
             { assertEquals(sphere, xs!![0].obj) },
             { assertEquals(sphere, xs!![1].obj) }
         )
+    }
+
+    @Test
+    fun `A sphere's default transformation`() {
+        val s = sphere()
+
+        assertEquals(Matrix.identity(), s.transform)
+    }
+
+    @Test
+    fun `Changing a sphere's transformation`() {
+        val s = sphere()
+        val t = Matrix.translation(2, 3, 4)
+
+        s.transform = t
+
+        assertEquals(t, s.transform)
+    }
+
+    @Test
+    fun `Intersecting a scaled sphere with a ray`() {
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val s = sphere()
+
+        s.transform = Matrix.scaling(2, 2, 2)
+        val xs = s.intersect(r)
+
+        assertAll(
+            { assertNotNull(xs) },
+            { assertEquals(2, xs!!.count()) },
+            { assertEquals(3.0, xs!![0].t) },
+            { assertEquals(7.0, xs!![1].t) }
+        )
+    }
+
+    @Test
+    fun `Intersecting a translated sphere with a ray`() {
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val s = sphere()
+
+        s.transform = Matrix.translation(5, 0, 0)
+        val xs = s.intersect(r)
+
+        assertNull(xs)
     }
 }

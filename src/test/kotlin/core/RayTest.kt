@@ -30,4 +30,30 @@ internal class RayTest {
             { assertEquals(point(4.5, 3.0, 4.0), ray.at(2.5)) },
         )
     }
+
+    @Test
+    fun `Translating a ray`() {
+        val r = Ray(point(1, 2, 3), vector(0, 1, 0))
+        val m = Matrix.translation(3, 4, 5)
+
+        val r2 = r.transform(m)
+
+        assertAll(
+            { assertEquals(point(4, 6, 8), r2.origin) },
+            { assertEquals(vector(0, 1, 0), r2.dir) }
+        )
+    }
+
+    @Test
+    fun `Scaling a ray`() {
+        val r = Ray(point(1, 2, 3), vector(0, 1, 0))
+        val m = Matrix.scaling(2, 3, 4)
+
+        val r2 = r.transform(m)
+
+        assertAll(
+            { assertEquals(point(2, 6, 12), r2.origin) },
+            { assertEquals(vector(0, 3, 0), r2.dir) }
+        )
+    }
 }
