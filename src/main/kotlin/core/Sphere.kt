@@ -4,8 +4,8 @@ import core.Tuple.Companion.point
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Sphere(val radius: Number) {
-    fun intersect(ray: Ray): Pair<Number?, Number?>? {
+class Sphere(val radius: Number) : Object<Sphere> {
+    override fun intersect(ray: Ray): Intersections<Sphere>? {
         val sphereToRay = ray.origin - point(0, 0, 0)
 
         val a = ray.dir.dot(ray.dir)
@@ -16,8 +16,11 @@ class Sphere(val radius: Number) {
 
         if (discriminant < 0) return null
 
-        val t = { sqrtD: Double -> (-b + sqrtD) / (2.0 * a)}
+        val t = { sqrtD: Double -> (-b + sqrtD) / (2.0 * a) }
 
-        return t(-sqrt(discriminant)) to t(sqrt(discriminant))
+        return listOf(
+            Intersection(t(-sqrt(discriminant)), this),
+            Intersection(t(sqrt(discriminant)), this)
+        )
     }
 }

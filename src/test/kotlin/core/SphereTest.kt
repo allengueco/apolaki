@@ -21,8 +21,9 @@ internal class SphereTest {
         val xs = sphere.intersect(ray)
 
         assertAll(
-            { assertEquals(4.0, xs?.first) },
-            { assertEquals(6.0, xs?.second) }
+            { assertNotNull(xs) },
+            { assertEquals(sphere, xs!![0].obj) },
+            { assertEquals(sphere, xs!![1].obj) }
         )
     }
     @Test
@@ -34,8 +35,8 @@ internal class SphereTest {
 
         assertAll(
             { assertNotNull(xs) },
-            { assertEquals(5.0, xs?.first) },
-            { assertEquals(5.0, xs?.second) }
+            { assertEquals(sphere, xs!![0].obj) },
+            { assertEquals(sphere, xs!![1].obj) }
         )
     }
 
@@ -58,8 +59,8 @@ internal class SphereTest {
 
         assertAll(
             { assertNotNull(xs) },
-            { assertEquals(-1.0, xs?.first) },
-            { assertEquals(1.0, xs?.second) }
+            { assertEquals(sphere, xs!![0].obj) },
+            { assertEquals(sphere, xs!![1].obj) }
         )
     }
 
@@ -72,8 +73,8 @@ internal class SphereTest {
 
         assertAll(
             { assertNotNull(xs) },
-            { assertEquals(-6.0, xs?.first) },
-            { assertEquals(-4.0, xs?.second) }
+            { assertEquals(sphere, xs!![0].obj) },
+            { assertEquals(sphere, xs!![1].obj) }
         )
     }
 }

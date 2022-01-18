@@ -34,4 +34,56 @@ internal class IntersectionTest {
             { assertEquals(2, xs[1].t) }
         )
     }
+
+    @Test
+    fun `The hit, when all intersections have positive t`() {
+        val s = sphere()
+        val i1 = Intersection(1, s)
+        val i2 = Intersection(2, s)
+        val xs = listOf(i1, i2)
+
+        val i = xs.hit()
+
+        assertEquals(i1, i)
+    }
+
+    @Test
+    fun `The hit, when some intersections have negative t`() {
+        val s = sphere()
+        val i1 = Intersection(-1, s)
+        val i2 = Intersection(1, s)
+        val xs = listOf(i1, i2)
+
+        val i = xs.hit()
+
+        assertEquals(i2, i)
+    }
+
+    @Test
+    fun `The hit, when all intersections have negative t`() {
+        val s = sphere()
+        val i1 = Intersection(-2, s)
+        val i2 = Intersection(-1, s)
+        val xs = listOf(i1, i2)
+
+        val i = xs.hit()
+
+        assertNull(i)
+    }
+
+    @Test
+    fun `The hit is always the lowest non-negative intersection`() {
+        val s = sphere()
+        val i1 = Intersection(5, s)
+        val i2 = Intersection(7, s)
+        val i3 = Intersection(-3, s)
+        val i4 = Intersection(2, s)
+
+        val xs = listOf(i1, i2, i3, i4)
+
+        val i = xs.hit()
+
+        assertEquals(i4, i)
+
+    }
 }
