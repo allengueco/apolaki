@@ -4,7 +4,7 @@ import core.Tuple.Companion.point
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Sphere(val radius: Number) : Object {
+class Sphere(val radius: Number = 0.0) : Object {
     var transform = Matrix.identity()
     override fun intersect(ray: Ray): Intersections? {
         val ray = ray.transform(transform.inverse())

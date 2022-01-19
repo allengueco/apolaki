@@ -1,14 +1,11 @@
-import core.Canvas
-import core.Matrix
-import core.Point
+import core.*
 import core.Tuple.Companion.color
 import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
-import core.Vector
 import kotlin.math.PI
 
 fun main(args: Array<String>) {
-    `Putting It Together Ch4`()
+    `Putting It Together Ch5`()
 }
 
 fun `Putting It Together Ch1`() {
@@ -86,4 +83,37 @@ fun `Putting It Together Ch4`() {
 
     canvas.drawClock()
     canvas.saveCanvasToFile("pit_ch4.ppm")
+}
+
+fun `Putting It Together Ch5`() {
+    val canvas = Canvas(100,100, color(0, 0, 0))
+
+    val rayOrigin = point(0, 0, -5)
+    val wallZ = 10.0
+    val wallSize = 7.0
+
+    val canvasPixels = 100
+    val pixelSize = wallSize / canvasPixels
+
+    val half = wallSize / 2
+
+    val sphere = Sphere()
+    sphere.transform = sphere.transform.shear(1 to 0, 0 to 0, 0 to 0).scale(0.5, 1, 1)
+    val sphereColor = color(1, 0, 0)
+
+    for (y in 0 until canvasPixels - 1) {
+        val worldY = half - pixelSize * y
+        for (x in 0 until canvasPixels - 1) {
+            val worldX = -half + pixelSize * x
+
+            val pos = point(worldX, worldY, wallZ)
+
+            val r = Ray(rayOrigin, (pos - rayOrigin).normalize())
+            val xs = sphere.intersect(r)
+
+            xs?.let { canvas[x, y] = sphereColor }
+        }
+    }
+
+    canvas.saveCanvasToFile("pit_ch5.ppm")
 }
