@@ -2,13 +2,12 @@ package core
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import kotlin.random.Random
 
 internal class IntersectionTest {
     /**
      * Helper method that must return a sphere that is unique each time
      */
-    private fun sphere() = Sphere(Random.nextDouble(10.0))
+    private fun sphere() = Sphere()
     @Test
     fun `An intersection encapsulates t and object`() {
         val s = sphere()

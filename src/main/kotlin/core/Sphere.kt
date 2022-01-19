@@ -4,8 +4,9 @@ import core.Tuple.Companion.point
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Sphere(val radius: Number = 0.0) : Object {
+class Sphere() : Object {
     var transform = Matrix.identity()
+    var material = Material()
     override fun intersect(ray: Ray): Intersections? {
         val ray = ray.transform(transform.inverse())
         val sphereToRay = ray.origin - point(0, 0, 0)
@@ -24,5 +25,13 @@ class Sphere(val radius: Number = 0.0) : Object {
             Intersection(t(-sqrt(discriminant)), this),
             Intersection(t(sqrt(discriminant)), this)
         )
+    }
+
+    fun normal(worldPoint: Tuple): Tuple {
+        val objectPoint = transform.inverse() * worldPoint
+        val objectNormal = objectPoint - point(0, 0, 0)
+        val worldNormal = transform.inverse().transpose() * objectNormal
+        worldNormal.w = 0.0 // hacky way to preserve the normal being a vector
+        return worldNormal.normalize()
     }
 }

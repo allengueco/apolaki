@@ -7,7 +7,7 @@ data class Tuple(
     val x: Double,
     val y: Double,
     val z: Double,
-    val w: Double
+    var w: Double
 ) : Iterable<Double> {
     val red get() = this.x
     val green get() = this.y
@@ -21,17 +21,11 @@ data class Tuple(
     constructor(x: Int, y: Int, z: Int, w: Int) : this(x.toDouble(), y.toDouble(), z.toDouble(), w.toDouble()) {}
 
     companion object {
-        fun point(x: Double, y: Double, z: Double) = Tuple(x, y, z, 1.0)
+        fun point(x: Number, y: Number, z: Number) = Tuple(x.toDouble(), y.toDouble(), z.toDouble(), 1.0)
 
-        fun point(x: Int, y: Int, z: Int) = Tuple(x, y, z, 1)
+        fun vector(x: Number, y: Number, z: Number) = Tuple(x.toDouble(), y.toDouble(), z.toDouble(), 0.0)
 
-        fun vector(x: Double, y: Double, z: Double) = Tuple(x, y, z, 0.0)
-
-        fun vector(x: Int, y: Int, z: Int) = Tuple(x, y, z, 0)
-
-        fun color(x: Double, y: Double, z: Double) = vector(x, y, z) // default to the w component of color as 1
-
-        fun color(x: Int, y: Int, z: Int) = vector(x, y, z)
+        fun color(x: Number, y: Number, z: Number) = vector(x, y, z) // default to the w component to be 0 (a vector)
 
     }
 
@@ -113,6 +107,8 @@ data class Tuple(
     override fun iterator(): Iterator<Double> {
         return listOf(this.x, this.y, this.z, this.w).iterator()
     }
+
+    fun reflect(normal: Tuple) = this - normal * 2.0 * this.dot(normal)
 }
 
 typealias Color = Tuple

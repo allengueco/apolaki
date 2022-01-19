@@ -233,4 +233,25 @@ internal class TupleTest {
         assertEquals(color(.9, 0.2, .04), c1 * c2)
     }
 
+
+    @Test
+    fun `Reflecting a vector approaching at 45deg`() {
+        val v = vector(1, -1, 0)
+        val n = vector(0, 1, 0)
+
+        val r = v.reflect(n)
+
+        assertEquals(vector(1, 1, 0), r)
+    }
+
+    @Test
+    fun `Reflecting a vector off a slanted surface`() {
+        val v = vector(0, -1, 0)
+        val n = vector(sqrt(2.0)/2, sqrt(2.0)/2, 0)
+
+        val r = v.reflect(n)
+
+        assertEquals(vector(1, 0, 0), r)
+    }
+
 }
