@@ -5,7 +5,7 @@ import core.Tuple.Companion.point
 
 class World(
     val light: Light? = null,
-    private val objects: MutableCollection<WorldObject> = mutableListOf(),
+    val objects: MutableList<WorldObject> = mutableListOf(),
 ) : Intersect {
     val empty: Boolean by lazy { objects.isEmpty() }
 
@@ -32,6 +32,17 @@ class World(
                 }
             )
         )
+    }
+
+    fun shade(comps: Computation): Color {
+        return if (light != null) {
+            comps.intersection
+                .obj
+                .material
+                .lighting(light, comps.point, comps.eyeVector, comps.normalVector)
+        } else {
+            color(0, 0, 0) // shade black if empty? idk if right
+        }
     }
 
     operator fun contains(obj: WorldObject) = obj in objects

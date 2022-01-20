@@ -86,7 +86,7 @@ fun `Putting It Together Ch4`() {
 }
 
 fun `Putting It Together Ch5`() {
-    val canvas = Canvas(100,100, color(0, 0, 0))
+    val canvas = Canvas(100, 100, color(0, 0, 0))
 
     val rayOrigin = point(0, 0, -5)
     val wallZ = 10.0
@@ -120,7 +120,7 @@ fun `Putting It Together Ch5`() {
 
 fun `Putting It Together Ch6`() {
     val canvasPixels = 250
-    val canvas = Canvas(canvasPixels,canvasPixels, color(0, 0, 0))
+    val canvas = Canvas(canvasPixels, canvasPixels, color(0, 0, 0))
 
     val rayOrigin = point(0, 0, -5)
     val wallZ = 10.0
@@ -145,13 +145,16 @@ fun `Putting It Together Ch6`() {
             val ray = Ray(rayOrigin, (pos - rayOrigin).normalize())
             val xs = sphere.intersect(ray)
 
-            xs?.let { hits ->
-                val hit = hits.hit()
-                val point = ray.at(hit.t)
-                val normal = hit.obj.normal(point)
-                val eye = -ray.dir
-                val color = hit.obj.material.lighting(light, point, eye, normal)
-                canvas[x, y] = color
+            xs?.let {
+                it.hit()?.let { h ->
+                    {
+                        val point = ray.at(h.t)
+                        val normal = h.obj.normal(point)
+                        val eye = -ray.dir
+                        val color = h.obj.material.lighting(light, point, eye, normal)
+                        canvas[x, y] = color
+                    }
+                }
             }
         }
     }

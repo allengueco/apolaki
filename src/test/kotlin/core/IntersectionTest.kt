@@ -83,6 +83,49 @@ internal class IntersectionTest {
         val i = xs.hit()
 
         assertEquals(i4, i)
+    }
+
+    @Test
+    fun `Precomputing the state of an intersection`() {
+        val r = Ray(Tuple.point(0, 0, -5), Tuple.vector(0, 0, 1))
+        val shape = Sphere()
+        val i = Intersection(4, shape)
+
+        val comps = i.compute(r)
+
+        assertAll(
+            { assertEquals(comps.intersection.t, i.t) },
+            { assertEquals(comps.intersection.obj, i.obj) },
+            { assertEquals(comps.point, Tuple.point(0, 0, -1)) },
+            { assertEquals(comps.eyeVector, Tuple.vector(0, 0, -1)) },
+            { assertEquals(comps.normalVector, Tuple.vector(0, 0, -1)) }
+        )
+    }
+
+    @Test
+    fun `The hit, when an intersection occurs on the outside`() {
+        val r = Ray(Tuple.point(0, 0, -5), Tuple.vector(0, 0, 1))
+        val shape = Sphere()
+        val i = Intersection(4, shape)
+
+        val comps = i.compute(r)
+
+        assertFalse(comps.inside)
+    }
+
+    @Test
+    fun `The hit, when an intersection occurs on the inside`() {
+        val r = Ray(Tuple.point(0, 0, 0), Tuple.vector(0, 0, 1))
+        val shape = Sphere()
+        val i = Intersection(1, shape)
+
+        val comps = i.compute(r)
+        assertAll(
+            { assertTrue(comps.inside) },
+            { assertEquals(comps.point, Tuple.point(0, 0, 1)) },
+            { assertEquals(comps.eyeVector, Tuple.vector(0, 0, -1)) },
+            { assertEquals(comps.normalVector, Tuple.vector(0, 0, -1)) }
+        )
 
     }
 }
