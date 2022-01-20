@@ -1,6 +1,5 @@
 package core
 
-sealed interface Object {
-    var material: Material
+interface Normal {
     fun normal(worldPoint: Tuple): Tuple
 }

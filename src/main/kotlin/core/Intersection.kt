@@ -1,6 +1,6 @@
 package core
 
-class Intersection(val t: Number, val obj: Object)
+class Intersection(val t: Number, val obj: WorldObject)
 
 typealias Intersections = List<Intersection>
 

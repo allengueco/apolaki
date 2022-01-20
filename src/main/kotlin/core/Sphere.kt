@@ -4,7 +4,7 @@ import core.Tuple.Companion.point
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Sphere : Object, Intersect {
+class Sphere : WorldObject {
     override var material = Material()
     var transform = Matrix.identity()
     override fun intersect(ray: Ray): Intersections? {
@@ -33,5 +33,23 @@ class Sphere : Object, Intersect {
         val worldNormal = transform.inverse().transpose() * objectNormal
         worldNormal.w = 0.0 // hacky way to preserve the normal being a vector
         return worldNormal.normalize()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Sphere
+
+        if (material != other.material) return false
+        if (transform != other.transform) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = material.hashCode()
+        result = 31 * result + transform.hashCode()
+        return result
     }
 }
