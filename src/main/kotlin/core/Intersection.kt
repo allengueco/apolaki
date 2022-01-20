@@ -6,6 +6,5 @@ typealias Intersections = List<Intersection>
 
 fun Intersections.count() = this.size
 
-fun Intersections.hit() = this.filter { it.t.toDouble() > 0 }
-    .minByOrNull { it.t.toDouble() }
+fun Intersections.hit() = this.filter { it.t.toDouble() > 0 }.minByOrNull { it.t.toDouble() }!!
 

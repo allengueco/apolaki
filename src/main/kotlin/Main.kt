@@ -5,7 +5,7 @@ import core.Tuple.Companion.vector
 import kotlin.math.PI
 
 fun main(args: Array<String>) {
-    `Putting It Together Ch5`()
+    `Putting It Together Ch6`()
 }
 
 fun `Putting It Together Ch1`() {
@@ -116,4 +116,45 @@ fun `Putting It Together Ch5`() {
     }
 
     canvas.saveCanvasToFile("pit_ch5.ppm")
+}
+
+fun `Putting It Together Ch6`() {
+    val canvasPixels = 250
+    val canvas = Canvas(canvasPixels,canvasPixels, color(0, 0, 0))
+
+    val rayOrigin = point(0, 0, -5)
+    val wallZ = 10.0
+    val wallSize = 7.0
+
+    val pixelSize = wallSize / canvasPixels
+
+    val half = wallSize / 2
+
+    val sphere = Sphere()
+    sphere.material.color = color(1, 0.2, 1)
+
+    val light = Light(point(-10, 10, -10), color(1, 1, 1))
+
+    for (y in 0 until canvasPixels - 1) {
+        val worldY = half - pixelSize * y
+        for (x in 0 until canvasPixels - 1) {
+            val worldX = -half + pixelSize * x
+
+            val pos = point(worldX, worldY, wallZ)
+
+            val ray = Ray(rayOrigin, (pos - rayOrigin).normalize())
+            val xs = sphere.intersect(ray)
+
+            xs?.let { hits ->
+                val hit = hits.hit()
+                val point = ray.at(hit.t)
+                val normal = hit.obj.normal(point)
+                val eye = -ray.dir
+                val color = hit.obj.material.lighting(light, point, eye, normal)
+                canvas[x, y] = color
+            }
+        }
+    }
+
+    canvas.saveCanvasToFile("pit_ch6.ppm")
 }
