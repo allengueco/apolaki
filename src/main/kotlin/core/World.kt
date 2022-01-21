@@ -4,8 +4,17 @@ import core.Tuple.Companion.color
 import core.Tuple.Companion.point
 
 class World(
-    val light: Light? = null,
-    val objects: MutableList<WorldObject> = mutableListOf(),
+    val light: Light? = Light(point(-10, 10, -10), color(1, 1, 1)),
+    val objects: MutableList<WorldObject> = mutableListOf(
+        Sphere().apply {
+            material.color = color(0.8, 1.0, 0.6)
+            material.diffuse = 0.7
+            material.specular = 0.2
+        },
+        Sphere().apply {
+            transform = transform.scale(0.5, 0.5, 0.5)
+        }
+    ),
 ) : Intersect {
     val empty: Boolean by lazy { objects.isEmpty() }
 
@@ -19,19 +28,7 @@ class World(
     }
 
     companion object {
-        fun default() = World(
-            light = Light(point(-10, 10, -10), color(1, 1, 1)),
-            objects = mutableListOf(
-                Sphere().apply {
-                    material.color = color(0.8, 1.0, 0.6)
-                    material.diffuse = 0.7
-                    material.specular = 0.2
-                },
-                Sphere().apply {
-                    transform = transform.scale(0.5, 0.5, 0.5)
-                }
-            )
-        )
+        fun empty() = World(null, mutableListOf())
     }
 
     fun shade(comps: Computation): Color {
@@ -46,4 +43,9 @@ class World(
     }
 
     operator fun contains(obj: WorldObject) = obj in objects
+    fun color(r: Ray) = intersect(r)
+        ?.hit()
+        ?.compute(r)
+        ?.let { shade(it) }
+        ?: color(0, 0, 0)
 }
