@@ -231,6 +231,21 @@ class Matrix(init: () -> List<List<Double>>) {
                 }
                 .toMatrix()
         }
+
+        fun view(from: Tuple, to: Tuple, up: Tuple): Matrix {
+            val forward = (to - from).normalize()
+            val left = forward.cross(up.normalize())
+            val trueUp = left.cross(forward)
+
+            return Matrix {
+                listOf(
+                    listOf(left.x, left.y, left.z, 0.0),
+                    listOf(trueUp.x, trueUp.y, trueUp.z, 0.0),
+                    listOf(-forward.x, -forward.y, -forward.z, 0.0),
+                    listOf(0.0, 0.0, 0.0, 1.0)
+                )
+            } * translation(-from.x, -from.y, -from.z)
+        }
     }
 }
 fun List<List<Double>>.toMatrix() = Matrix { this }
