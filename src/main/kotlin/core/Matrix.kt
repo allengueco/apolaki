@@ -161,26 +161,20 @@ class Matrix(init: () -> List<List<Double>>) {
             }.toMutableList()
         }
 
-        fun translation(x: Double, y: Double, z: Double): Matrix {
+        fun translation(x: Number, y: Number, z: Number): Matrix {
             val identity = identityList()
-            identity[0][3] = x
-            identity[1][3] = y
-            identity[2][3] = z
+            identity[0][3] = x.toDouble()
+            identity[1][3] = y.toDouble()
+            identity[2][3] = z.toDouble()
 
             return identity.toMatrix()
         }
 
-        fun translation(x: Int, y: Int, z: Int) =
-            translation(x.toDouble(), y.toDouble(), z.toDouble())
-
-        fun scaling(x: Int, y: Int, z: Int) =
-            scaling(x.toDouble(), y.toDouble(), z.toDouble())
-
-        fun scaling(x: Double, y: Double, z: Double): Matrix {
+        fun scaling(x: Number, y: Number, z: Number): Matrix {
             val identity = identityList()
-            identity[0][0] = x
-            identity[1][1] = y
-            identity[2][2] = z
+            identity[0][0] = x.toDouble()
+            identity[1][1] = y.toDouble()
+            identity[2][2] = z.toDouble()
 
             return identity.toMatrix()
         }

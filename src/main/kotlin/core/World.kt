@@ -38,7 +38,7 @@ class World(
                 .material
                 .lighting(light, comps.point, comps.eyeVector, comps.normalVector)
         } else {
-            color(0, 0, 0) // shade black if empty? idk if right
+            color(0.5, 0.5, 0.5) // shade black if empty? idk if right
         }
     }
 
@@ -61,5 +61,9 @@ class World(
         }
 
         return image
+    }
+
+    override fun toString(): String {
+        return "World(light=$light, objects=$objects)"
     }
 }
