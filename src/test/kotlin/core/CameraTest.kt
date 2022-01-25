@@ -41,7 +41,7 @@ internal class CameraTest {
     @Test
     fun `Constructing a ray through the center of the canvas`() {
         val c = Camera(201, 101, PI / 2)
-        val r = c.ray(100, 50)
+        val r = c.castRay(100, 50)
 
         assertAll(
             { assertEquals(point(0, 0, 0), r.origin) },
@@ -52,7 +52,7 @@ internal class CameraTest {
     @Test
     fun `Constructing a ray through a corner of the canvas`() {
         val c = Camera(201, 101, PI / 2)
-        val r = c.ray(0, 0)
+        val r = c.castRay(0, 0)
 
         assertAll(
             { assertEquals(point(0, 0, 0), r.origin) },
@@ -65,7 +65,7 @@ internal class CameraTest {
         val c = Camera(201, 101, PI / 2).apply {
             transform = transform.rotateY(PI/4).translate(0, -2, 5)
         }
-        val r = c.ray(100, 50)
+        val r = c.castRay(100, 50)
 
         assertAll(
             { assertEquals(point(0, 2, -5), r.origin) },
