@@ -3,15 +3,15 @@ package core
 import core.Tuple.Companion.point
 import kotlin.math.tan
 
-class Camera(val height: Int, val width: Int, val fov: Double   ) {
+class Camera(val hSize: Int, val vSize: Int, val fov: Double) {
     var transform = Matrix.identity()
     private val halfWidth: Double
     private val halfHeight: Double
     val pixelSize: Double
     init {
-        val aspectRatio = height / width
         val halfView = tan(fov / 2)
-        if (aspectRatio >= 1) {
+        val aspectRatio = hSize.toDouble() / vSize.toDouble()
+        if (aspectRatio >= 1.0) {
             halfWidth = halfView
             halfHeight = halfView / aspectRatio
         }
@@ -19,9 +19,9 @@ class Camera(val height: Int, val width: Int, val fov: Double   ) {
             halfWidth = halfView * aspectRatio
             halfHeight = halfView
         }
-        pixelSize = (halfWidth * 2) / height
+        pixelSize = (halfWidth * 2) / hSize
     }
-    fun castRay(x: Int, y: Int): Ray {
+    fun cast(x: Int, y: Int): Ray {
         val xOffset = (x + .5) * pixelSize
         val yOffset = (y + .5) * pixelSize
 
@@ -34,5 +34,9 @@ class Camera(val height: Int, val width: Int, val fov: Double   ) {
         val dir = (pixel - origin).normalize()
 
         return Ray(origin, dir)
+    }
+
+    override fun toString(): String {
+        return "Camera(hSize=$hSize, vSize=$vSize, fov=$fov, halfWidth=$halfWidth, halfHeight=$halfHeight, pixelSize=$pixelSize)"
     }
 }

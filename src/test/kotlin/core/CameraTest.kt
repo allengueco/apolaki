@@ -8,6 +8,7 @@ import org.junit.jupiter.api.assertAll
 import kotlin.math.PI
 import kotlin.math.sqrt
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class CameraTest {
     @Test
@@ -19,8 +20,8 @@ internal class CameraTest {
         val c = Camera(height, width, fov)
 
         assertAll(
-            { assertEquals(160, c.height) },
-            { assertEquals(120, c.width) },
+            { assertEquals(160, c.hSize) },
+            { assertEquals(120, c.vSize) },
             { assertEquals(PI / 2, c.fov, 0.0001) },
             { assertEquals(Matrix.identity(), c.transform) }
         )
@@ -29,19 +30,19 @@ internal class CameraTest {
     @Test
     fun `The pixel size for a horizontal canvas`() {
         val c = Camera(200, 125, PI/2)
-        assertEquals(0.01, c.pixelSize)
+        assertTrue { Utils.equals(0.01, c.pixelSize) }
     }
 
     @Test
     fun `The pixel size for a vertical canvas`() {
         val c = Camera(125, 200, PI/2)
-        assertEquals(0.01, c.pixelSize)
+        assertTrue { Utils.equals(0.01, c.pixelSize) }
     }
 
     @Test
     fun `Constructing a ray through the center of the canvas`() {
         val c = Camera(201, 101, PI / 2)
-        val r = c.castRay(100, 50)
+        val r = c.cast(100, 50)
 
         assertAll(
             { assertEquals(point(0, 0, 0), r.origin) },
@@ -52,7 +53,7 @@ internal class CameraTest {
     @Test
     fun `Constructing a ray through a corner of the canvas`() {
         val c = Camera(201, 101, PI / 2)
-        val r = c.castRay(0, 0)
+        val r = c.cast(0, 0)
 
         assertAll(
             { assertEquals(point(0, 0, 0), r.origin) },
@@ -63,9 +64,9 @@ internal class CameraTest {
     @Test
     fun `Constructing a ray when the camera is transformed`() {
         val c = Camera(201, 101, PI / 2).apply {
-            transform = transform.rotateY(PI/4).translate(0, -2, 5)
+            transform = transform.translate(0, -2, 5).rotateY(PI/4)
         }
-        val r = c.castRay(100, 50)
+        val r = c.cast(100, 50)
 
         assertAll(
             { assertEquals(point(0, 2, -5), r.origin) },

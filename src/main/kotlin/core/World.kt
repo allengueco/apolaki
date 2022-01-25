@@ -48,4 +48,18 @@ class World(
         ?.compute(r)
         ?.let { shade(it) }
         ?: color(0, 0, 0)
+
+    fun render(camera: Camera): Canvas {
+        val image = Canvas(camera.hSize, camera.vSize)
+
+        (0 until camera.vSize). forEach { y ->
+            (0 until camera.hSize). forEach { x ->
+                val r = camera.cast(x, y)
+                val color = color(r)
+                image[x, y] = color
+            }
+        }
+
+        return image
+    }
 }
