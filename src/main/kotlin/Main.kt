@@ -5,7 +5,7 @@ import core.Tuple.Companion.vector
 import kotlin.math.PI
 
 fun main(args: Array<String>) {
-    `Putting It Together Ch7`()
+    `Putting It Together Ch8`()
 }
 
 fun `Putting It Together Ch1`() {
@@ -219,7 +219,7 @@ fun `Putting It Together Ch7`() {
         }
     }
 
-    val objects = mutableListOf<WorldObject>(
+    val objects = mutableListOf<Shape>(
         floor, leftWall, rightWall, left, right, middle
     )
     val world = World(
@@ -235,4 +235,82 @@ fun `Putting It Together Ch7`() {
     }
 
     world.render(camera).also { it.saveCanvasToFile("pit_ch7.ppm") }
+}
+
+/**
+ * Same as Ch7 but this one has shadows now
+ */
+fun `Putting It Together Ch8`() {
+    val floor = Sphere().apply {
+        transform = Matrix.scaling(10, 0.01, 10)
+        material = Material().apply {
+            color = color(1, 0.9, 0.9)
+            specular = 0
+        }
+    }
+
+    val leftWall = Sphere().apply {
+        transform =
+            Matrix.translation(0, 0, 5) *
+                    Matrix.rotationY(-PI / 4) *
+                    Matrix.rotationX(PI / 2) *
+                    Matrix.scaling(10, 0.01, 10)
+        material = floor.material
+    }
+
+    val rightWall = Sphere().apply {
+        transform =
+            Matrix.translation(0, 0, 5) *
+                    Matrix.rotationY(PI / 4) *
+                    Matrix.rotationX(PI / 2) *
+                    Matrix.scaling(10, 0.01, 10)
+        material = floor.material
+    }
+
+    val middle = Sphere().apply {
+        transform = transform.translate(-0.5, 1, 0.5)
+        material = Material().apply {
+            color = color(0.1, 1, 0.5)
+            diffuse = 0.7
+            specular = 0.3
+        }
+    }
+
+    val right = Sphere().apply {
+        transform =
+            Matrix.translation(1.5, 0.5, -0.5) *
+                    Matrix.scaling(0.5, 0.5, 0.5)
+        material = Material().apply {
+            color = color(0.5, 1, 0.1)
+            diffuse = 0.7
+            specular = 0.3
+        }
+    }
+
+    val left = Sphere().apply {
+        transform = Matrix.translation(-1.5, 0.33, -0.75) *
+                Matrix.scaling(.33, 0.33, 0.33)
+        material = Material().apply {
+            color = color(1, 0.8, 0.1)
+            diffuse = 0.7
+            specular = 0.3
+        }
+    }
+
+    val objects = mutableListOf<Shape>(
+        floor, leftWall, rightWall, left, right, middle
+    )
+    val world = World(
+        light = Light(point(-10, 10, -10), color(1, 1, 1)),
+        objects = objects
+    )
+
+    val camera = Camera(500, 250, PI / 5).apply {
+        transform = Matrix.view(
+            from = point(0, 1.5, -10),
+            to = point(0, 1, 0),
+            up = vector(0, 1, 0))
+    }
+
+    world.render(camera).also { it.saveCanvasToFile("pit_ch8.ppm") }
 }

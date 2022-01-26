@@ -4,8 +4,8 @@ import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import kotlin.math.PI
 import kotlin.math.sqrt
+import kotlin.test.assertIs
 
 internal class SphereTest {
 
@@ -84,50 +84,6 @@ internal class SphereTest {
     }
 
     @Test
-    fun `A sphere's default transformation`() {
-        val s = sphere()
-
-        assertEquals(Matrix.identity(), s.transform)
-    }
-
-    @Test
-    fun `Changing a sphere's transformation`() {
-        val s = sphere()
-        val t = Matrix.translation(2, 3, 4)
-
-        s.transform = t
-
-        assertEquals(t, s.transform)
-    }
-
-    @Test
-    fun `Intersecting a scaled sphere with a ray`() {
-        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
-        val s = sphere()
-
-        s.transform = Matrix.scaling(2, 2, 2)
-        val xs = s.intersect(r)
-
-        assertAll(
-            { assertNotNull(xs) },
-            { assertEquals(2, xs!!.count()) },
-            { assertEquals(3.0, xs!![0].t) },
-            { assertEquals(7.0, xs!![1].t) }
-        )
-    }
-
-    @Test
-    fun `Intersecting a translated sphere with a ray`() {
-        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
-        val s = sphere()
-
-        s.transform = Matrix.translation(5, 0, 0)
-        val xs = s.intersect(r)
-
-        assertNull(xs)
-    }
-
-    @Test
     fun `The normal on a sphere at a point on the x axis`() {
         val s = sphere()
 
@@ -173,44 +129,7 @@ internal class SphereTest {
     }
 
     @Test
-    fun `Computing the normal on a translated sphere`() {
-        val s = sphere()
-        s.transform = s.transform.translate(0, 1, 0)
-
-        val n = s.normal(point(0.0, 1.70711, -0.70711))
-
-        assertEquals(vector(0.0, 0.70711, -0.70711), n)
-    }
-
-    @Test
-    fun `Computing the normal on a transformed sphere`() {
-        val s = sphere()
-        s.transform = s.transform
-            .rotateZ(PI/5)
-            .scale(1, 0.5, 1)
-
-        val n = s.normal(point(0.0, sqrt(2.0)/2, -sqrt(2.0)/2))
-
-        assertEquals(vector(0.0, 0.97014, -0.24254), n)
-    }
-
-    @Test
-    fun `A sphere has a default material`() {
-        val s = sphere()
-
-        val m = s.material
-
-        assertEquals(Material(), m)
-    }
-
-    @Test
-    fun `A sphere may be assigned material`() {
-        val s = sphere()
-        val m = s.material
-        m.ambient = 1.0
-
-        s.material = m
-
-        assertEquals(m, s.material)
+    fun `A Sphere is a Shape`() {
+        assertIs<Shape>(sphere(), "A Sphere is a Shape")
     }
 }

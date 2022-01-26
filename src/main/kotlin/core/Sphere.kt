@@ -4,15 +4,13 @@ import core.Tuple.Companion.point
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Sphere : WorldObject {
-    override var material = Material()
-    var transform = Matrix.identity()
-    override fun intersect(ray: Ray): Intersections? {
-        val transformedRay = ray.transform(transform.inverse())
-        val sphereToRay = transformedRay.origin - point(0, 0, 0)
+class Sphere : Shape() {
 
-        val a = transformedRay.dir.dot(transformedRay.dir)
-        val b = 2 * transformedRay.dir.dot(sphereToRay)
+    override fun localIntersect(localRay: Ray): Intersections? {
+        val sphereToRay = localRay.origin - point(0, 0, 0)
+
+        val a = localRay.dir.dot(localRay.dir)
+        val b = 2 * localRay.dir.dot(sphereToRay)
         val c = sphereToRay.dot(sphereToRay) - 1
 
         val discriminant = b.pow(2) - 4 * a * c
@@ -27,12 +25,8 @@ class Sphere : WorldObject {
         )
     }
 
-    override fun normal(worldPoint: Tuple): Tuple {
-        val objectPoint = transform.inverse() * worldPoint
-        val objectNormal = objectPoint - point(0, 0, 0)
-        val worldNormal = transform.inverse().transpose() * objectNormal
-        worldNormal.w = 0.0 // hacky way to preserve the normal being a vector
-        return worldNormal.normalize()
+    override fun localNormal(localPoint: Point): Tuple {
+        return (localPoint - point(0, 0, 0)).normalize()
     }
 
     override fun equals(other: Any?): Boolean {

@@ -5,7 +5,7 @@ import core.Tuple.Companion.point
 
 class World(
     val light: Light? = Light(point(-10, 10, -10), color(1, 1, 1)),
-    val objects: MutableList<WorldObject> = mutableListOf(
+    val objects: MutableList<Shape> = mutableListOf(
         Sphere().apply {
             material.color = color(0.8, 1.0, 0.6)
             material.diffuse = 0.7
@@ -43,7 +43,7 @@ class World(
         }
     }
 
-    operator fun contains(obj: WorldObject) = obj in objects
+    operator fun contains(obj: Shape) = obj in objects
     fun color(r: Ray) = intersect(r)
         ?.hit()
         ?.compute(r)

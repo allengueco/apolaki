@@ -2,7 +2,7 @@ package core
 
 import Utils.Companion.EPSILON
 
-class Intersection(val t: Number, val obj: WorldObject) {
+class Intersection(val t: Number, val obj: Shape) {
     fun compute(r: Ray) = Computation(this, r)
 }
 

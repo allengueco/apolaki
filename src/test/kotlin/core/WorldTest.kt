@@ -153,7 +153,7 @@ internal class WorldTest {
         val s2 = Sphere().apply {
             transform = transform.translate(0, 0, 10)
         }
-        val objects = mutableListOf<WorldObject>(s1, s2)
+        val objects = mutableListOf<Shape>(s1, s2)
         val w = World(
             light = Light(point(0, 0, -10), color(1, 1, 1)),
             objects = objects
