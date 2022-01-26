@@ -72,7 +72,7 @@ internal class ShapeTest {
         val s = TestShape().apply {
             transform = transform.translate(5, 0, 0)
         }
-        
+
         s.intersect(r)
 
         assertAll(

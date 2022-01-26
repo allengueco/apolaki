@@ -19,7 +19,7 @@ internal class SphereTest {
         val ray = Ray(point(0, 0, -5), vector(0, 0, 1))
         val sphere = sphere()
 
-        val xs = sphere.intersect(ray)
+        val xs = sphere.localIntersect(ray)
 
         assertAll(
             { assertNotNull(xs) },
@@ -33,7 +33,7 @@ internal class SphereTest {
         val ray = Ray(point(0, 1, -5), vector(0, 0, 1))
         val sphere = sphere()
 
-        val xs = sphere.intersect(ray)
+        val xs = sphere.localIntersect(ray)
 
         assertAll(
             { assertNotNull(xs) },
@@ -48,7 +48,7 @@ internal class SphereTest {
         val ray = Ray(point(0, 2, -5), vector(0, 0, 1))
         val sphere = sphere()
 
-        val xs = sphere.intersect(ray)
+        val xs = sphere.localIntersect(ray)
 
         assertNull(xs)
     }
@@ -58,7 +58,7 @@ internal class SphereTest {
         val ray = Ray(point(0, 0, 0), vector(0, 0, 1))
         val sphere = sphere()
 
-        val xs = sphere.intersect(ray)
+        val xs = sphere.localIntersect(ray)
 
         assertAll(
             { assertNotNull(xs) },
@@ -73,7 +73,7 @@ internal class SphereTest {
         val ray = Ray(point(0, 0, 5), vector(0, 0, 1))
         val sphere = sphere()
 
-        val xs = sphere.intersect(ray)
+        val xs = sphere.localIntersect(ray)
 
         assertAll(
             { assertNotNull(xs) },
@@ -84,46 +84,46 @@ internal class SphereTest {
     }
 
     @Test
-    fun `The normal on a sphere at a point on the x axis`() {
+    fun `The localNormal on a sphere at a point on the x axis`() {
         val s = sphere()
 
-        val n = s.normal(point(1, 0, 0))
+        val n = s.localNormal(point(1, 0, 0))
 
         assertEquals(vector(1, 0, 0), n)
     }
 
     @Test
-    fun `The normal on a sphere at a point on the y axis`() {
+    fun `The localNormal on a sphere at a point on the y axis`() {
         val s = sphere()
 
-        val n = s.normal(point(0, 1, 0))
+        val n = s.localNormal(point(0, 1, 0))
 
         assertEquals(vector(0, 1, 0), n)
     }
 
     @Test
-    fun `The normal on a sphere at a point on the z axis`() {
+    fun `The localNormal on a sphere at a point on the z axis`() {
         val s = sphere()
 
-        val n = s.normal(point(0, 0, 1))
+        val n = s.localNormal(point(0, 0, 1))
 
         assertEquals(vector(0, 0, 1), n)
     }
 
     @Test
-    fun `The normal on a sphere at a nonaxial point`() {
+    fun `The localNormal on a sphere at a nonaxial point`() {
         val s = sphere()
 
-        val n = s.normal(point(sqrt(3.0)/3, sqrt(3.0)/3, sqrt(3.0)/3))
+        val n = s.localNormal(point(sqrt(3.0)/3, sqrt(3.0)/3, sqrt(3.0)/3))
 
         assertEquals(vector(sqrt(3.0)/3, sqrt(3.0)/3, sqrt(3.0)/3), n)
     }
 
     @Test
-    fun `The normal is a normalized vector`() {
+    fun `The localNormal is a normalized vector`() {
         val s = sphere()
 
-        val n = s.normal(point(sqrt(3.0)/3, sqrt(3.0)/3, sqrt(3.0)/3))
+        val n = s.localNormal(point(sqrt(3.0)/3, sqrt(3.0)/3, sqrt(3.0)/3))
 
         assertEquals(n.normalize(), n)
     }
