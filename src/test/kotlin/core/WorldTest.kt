@@ -114,4 +114,57 @@ internal class WorldTest {
 
         assertEquals(w.objects[1].material.color, c)
     }
+
+    @Test
+    fun `There is no shadow when nothing is collinear with point and light`() {
+        val w = World()
+        val p = point(0, 10, 0)
+
+        assertFalse(w.isShadowed(p))
+    }
+
+    @Test
+    fun `The shadow when an object is between the point and the light`() {
+        val w = World()
+        val p = point(10, -10, 10)
+
+        assertTrue(w.isShadowed(p))
+    }
+
+    @Test
+    fun `There is no shadow when an object is behind the light`() {
+        val w = World()
+        val p = point(-20, 20, -20)
+
+        assertFalse(w.isShadowed(p))
+    }
+
+    @Test
+    fun `There is no shadow when an object is behind the point`() {
+        val w = World()
+        val p = point(-2, 2, -2)
+
+        assertFalse(w.isShadowed(p))
+    }
+
+    @Test
+    fun `shade() is given an intersection in shadow`() {
+        val s1 = Sphere()
+        val s2 = Sphere().apply {
+            transform = transform.translate(0, 0, 10)
+        }
+        val objects = mutableListOf<WorldObject>(s1, s2)
+        val w = World(
+            light = Light(point(0, 0, -10), color(1, 1, 1)),
+            objects = objects
+        )
+
+        val r = Ray(point(0, 0, 5), vector(0, 0, 1))
+        val i = Intersection(4, s2)
+
+        val comps = i.compute(r)
+        val c = w.shade(comps)
+
+        assertEquals(color(0.1, 0.1, 0.1), c)
+    }
 }

@@ -10,12 +10,22 @@ data class Material(
     var specular: Number = 0.9,
     var shininess: Number = 200.0,
 ) {
-    fun lighting(light: Light, position: Tuple, eyeVector: Tuple, normalVector: Tuple): Tuple {
+    fun lighting(
+        light: Light,
+        position: Tuple,
+        eyeVector: Tuple,
+        normalVector: Tuple,
+        inShadow: Boolean = false,
+    ): Tuple {
         val effectiveColor = color * light.intensity
 
         val lightVector = (light.position - position).normalize()
 
         val amb = effectiveColor * ambient.toDouble()
+
+        if (inShadow) {
+            return amb
+        }
 
         val lightDotNormal = lightVector.dot(normalVector)
         val dif = if (lightDotNormal < 0.0) color(0, 0, 0) else {

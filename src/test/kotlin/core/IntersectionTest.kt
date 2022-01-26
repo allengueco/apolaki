@@ -1,5 +1,8 @@
 package core
 
+import Utils.Companion.EPSILON
+import core.Tuple.Companion.point
+import core.Tuple.Companion.vector
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -87,7 +90,7 @@ internal class IntersectionTest {
 
     @Test
     fun `Precomputing the state of an intersection`() {
-        val r = Ray(Tuple.point(0, 0, -5), Tuple.vector(0, 0, 1))
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
         val shape = Sphere()
         val i = Intersection(4, shape)
 
@@ -96,15 +99,15 @@ internal class IntersectionTest {
         assertAll(
             { assertEquals(comps.intersection.t, i.t) },
             { assertEquals(comps.intersection.obj, i.obj) },
-            { assertEquals(comps.point, Tuple.point(0, 0, -1)) },
-            { assertEquals(comps.eyeVector, Tuple.vector(0, 0, -1)) },
-            { assertEquals(comps.normalVector, Tuple.vector(0, 0, -1)) }
+            { assertEquals(comps.point, point(0, 0, -1)) },
+            { assertEquals(comps.eyeVector, vector(0, 0, -1)) },
+            { assertEquals(comps.normalVector, vector(0, 0, -1)) }
         )
     }
 
     @Test
     fun `The hit, when an intersection occurs on the outside`() {
-        val r = Ray(Tuple.point(0, 0, -5), Tuple.vector(0, 0, 1))
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
         val shape = Sphere()
         val i = Intersection(4, shape)
 
@@ -115,17 +118,32 @@ internal class IntersectionTest {
 
     @Test
     fun `The hit, when an intersection occurs on the inside`() {
-        val r = Ray(Tuple.point(0, 0, 0), Tuple.vector(0, 0, 1))
+        val r = Ray(point(0, 0, 0), vector(0, 0, 1))
         val shape = Sphere()
         val i = Intersection(1, shape)
 
         val comps = i.compute(r)
         assertAll(
             { assertTrue(comps.inside) },
-            { assertEquals(comps.point, Tuple.point(0, 0, 1)) },
-            { assertEquals(comps.eyeVector, Tuple.vector(0, 0, -1)) },
-            { assertEquals(comps.normalVector, Tuple.vector(0, 0, -1)) }
+            { assertEquals(comps.point, point(0, 0, 1)) },
+            { assertEquals(comps.eyeVector, vector(0, 0, -1)) },
+            { assertEquals(comps.normalVector, vector(0, 0, -1)) }
         )
+    }
 
+    @Test
+    fun `The hit should offset the point`() {
+        val r = Ray(point(0, 0, -5), vector(0, 0, 1))
+        val shape = Sphere().apply {
+            transform = transform.translate(0, 0, 1)
+        }
+        val i = Intersection(5, shape)
+
+        val comps = i.compute(r)
+
+        assertAll(
+            { assertTrue(comps.overPoint.z < -EPSILON/2) },
+            { assertTrue(comps.point.z > comps.overPoint.z) }
+        )
     }
 }

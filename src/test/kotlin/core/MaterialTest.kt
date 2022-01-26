@@ -82,4 +82,16 @@ internal class MaterialTest {
 
         assertEquals(color(0.1, 0.1, 0.1), result)
     }
+
+    @Test
+    fun `Lighting with the surface in shadow`() {
+        val eyeVector = vector(0, 0, -1)
+        val normalVector = vector(0, 0, -1)
+        val light = Light(point(0, 0, -1), color(1, 1, 1))
+        val inShadow = true
+
+        val res = m.lighting(light, position, eyeVector, normalVector, inShadow)
+
+        assertEquals(color(0.1, 0.1, 0.1), res)
+    }
 }

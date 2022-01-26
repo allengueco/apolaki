@@ -33,10 +33,11 @@ class World(
 
     fun shade(comps: Computation): Color {
         return if (light != null) {
+            val isShadowed = isShadowed(comps.overPoint)
             comps.intersection
                 .obj
                 .material
-                .lighting(light, comps.point, comps.eyeVector, comps.normalVector)
+                .lighting(light, comps.point, comps.eyeVector, comps.normalVector, isShadowed)
         } else {
             color(0.5, 0.5, 0.5) // shade black if empty? idk if right
         }
@@ -65,5 +66,21 @@ class World(
 
     override fun toString(): String {
         return "World(light=$light, objects=$objects)"
+    }
+
+    fun isShadowed(point: Tuple): Boolean {
+        // If the world doesn't have a light, then every point is shadowed
+        return if (light == null) {
+            true
+        } else {
+            val v = light.position - point
+            val distance = v.magnitude()
+            val dir = v.normalize()
+
+            val r = Ray(point, dir)
+            val hit = intersect(r)?.hit()
+
+            (hit != null && hit.t.toDouble() < distance)
+        }
     }
 }

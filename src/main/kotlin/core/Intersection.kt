@@ -1,5 +1,7 @@
 package core
 
+import Utils.Companion.EPSILON
+
 class Intersection(val t: Number, val obj: WorldObject) {
     fun compute(r: Ray) = Computation(this, r)
 }
@@ -12,6 +14,7 @@ data class Computation(
     val eyeVector: Vector = -ray.dir
     val normalVector: Vector
     val inside: Boolean
+    val overPoint: Point
     init {
         val normal = intersection.obj.normal(point)
         val isOpposite = normal.dot(eyeVector) < 0.0
@@ -23,6 +26,8 @@ data class Computation(
             inside = false
             normalVector = normal
         }
+
+        overPoint = point + normalVector * EPSILON
     }
 }
 
