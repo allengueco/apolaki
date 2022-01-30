@@ -13,6 +13,7 @@ import kotlin.test.assertEquals
 internal class MaterialTest {
     private val m = Material()
     private val position = point(0, 0, 0)
+    val s = Sphere()
 
 
     @Test
@@ -34,7 +35,7 @@ internal class MaterialTest {
         val normalVector = vector(0, 0, -1)
         val light = Light(point(0, 0, -10), color(1, 1, 1))
 
-        val result = m.lighting(light, position, eyeVector, normalVector)
+        val result = m.lighting(light, s, position, eyeVector, normalVector)
 
         assertEquals(color(1.9, 1.9, 1.9), result)
     }
@@ -45,7 +46,7 @@ internal class MaterialTest {
         val normalVector = vector(0, 0, -1)
         val light = Light(point(0, 0, -10), color(1, 1, 1))
 
-        val result = m.lighting(light, position, eyeVector, normalVector)
+        val result = m.lighting(light, s, position, eyeVector, normalVector)
 
         assertEquals(color(1.0, 1.0, 1.0), result)
     }
@@ -56,7 +57,7 @@ internal class MaterialTest {
         val normalVector = vector(0, 0, -1)
         val light = Light(point(0, 10, -10), color(1, 1, 1))
 
-        val result = m.lighting(light, position, eyeVector, normalVector)
+        val result = m.lighting(light, s, position, eyeVector, normalVector)
 
         assertEquals(color(.7364, .7364, .7364), result)
     }
@@ -67,7 +68,7 @@ internal class MaterialTest {
         val normalVector = vector(0, 0, -1)
         val light = Light(point(0, 10, -10), color(1, 1, 1))
 
-        val result = m.lighting(light, position, eyeVector, normalVector)
+        val result = m.lighting(light, s, position, eyeVector, normalVector)
 
         assertEquals(color(1.6364, 1.6364, 1.6364), result)
     }
@@ -78,7 +79,7 @@ internal class MaterialTest {
         val normalVector = vector(0, 0, -1)
         val light = Light(point(0, 0, 10), color(1, 1, 1))
 
-        val result = m.lighting(light, position, eyeVector, normalVector)
+        val result = m.lighting(light, s, position, eyeVector, normalVector)
 
         assertEquals(color(0.1, 0.1, 0.1), result)
     }
@@ -90,8 +91,28 @@ internal class MaterialTest {
         val light = Light(point(0, 0, -1), color(1, 1, 1))
         val inShadow = true
 
-        val res = m.lighting(light, position, eyeVector, normalVector, inShadow)
+        val res = m.lighting(light, s, position, eyeVector, normalVector, inShadow)
 
         assertEquals(color(0.1, 0.1, 0.1), res)
+    }
+
+    @Test
+    fun `Lighting with a pattern applied`() {
+        val m = Material().apply {
+            ambient = 1.0
+            diffuse = 0.0
+            specular = 0.0
+            pattern = Stripe(color(1, 1, 1), color(0, 0, 0))
+        }
+
+        val eyeVector = vector(0, 0, -1)
+        val normalVector = vector(0, 0, -1)
+        val light = Light(point(0, 0, -10), color(1, 1, 1))
+
+        val c1 = m.lighting(light, s, point(0.9, 0, 0,), eyeVector, normalVector)
+        val c2 = m.lighting(light, s, point(1.1, 0, 0,), eyeVector, normalVector)
+
+        assertEquals(color(1, 1, 1), c1)
+        assertEquals(color(0, 0, 0), c2)
     }
 }

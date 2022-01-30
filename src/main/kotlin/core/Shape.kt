@@ -1,8 +1,7 @@
 package core
 
-abstract class Shape : Normal, Intersect {
+abstract class Shape : Normal, Intersect, Transform() {
     var material = Material()
-    var transform = Matrix.identity()
 
     abstract fun localIntersect(localRay: Ray): Intersections?
     abstract fun localNormal(localPoint: Point): Tuple

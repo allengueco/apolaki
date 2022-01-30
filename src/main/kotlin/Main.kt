@@ -151,7 +151,7 @@ fun `Putting It Together Ch6`() {
                         val point = ray.at(h.t)
                         val normal = h.obj.normal(point)
                         val eye = -ray.dir
-                        val color = h.obj.material.lighting(light, point, eye, normal)
+                        val color = h.obj.material.lighting(light, h.obj, point, eye, normal)
                         canvas[x, y] = color
                     }
                 }

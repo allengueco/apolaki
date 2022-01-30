@@ -9,15 +9,18 @@ data class Material(
     var diffuse: Number = 0.9,
     var specular: Number = 0.9,
     var shininess: Number = 200.0,
+    var pattern: Pattern? = null
 ) {
     fun lighting(
         light: Light,
+        obj: Shape,
         position: Tuple,
         eyeVector: Tuple,
         normalVector: Tuple,
         inShadow: Boolean = false,
     ): Tuple {
-        val effectiveColor = color * light.intensity
+        val colorToUse = pattern?.get(obj, position) ?: color
+        val effectiveColor = colorToUse * light.intensity
 
         val lightVector = (light.position - position).normalize()
 

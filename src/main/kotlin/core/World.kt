@@ -37,7 +37,7 @@ class World(
             comps.intersection
                 .obj
                 .material
-                .lighting(light, comps.point, comps.eyeVector, comps.normalVector, isShadowed)
+                .lighting(light, comps.intersection.obj, comps.point, comps.eyeVector, comps.normalVector, isShadowed)
         } else {
             color(0.5, 0.5, 0.5) // shade black if empty? idk if right
         }
