@@ -1,6 +1,10 @@
-package core
+package shape
 
 import Utils.Companion.EPSILON
+import scene.Intersection
+import scene.Intersections
+import core.Point
+import core.Ray
 import core.Tuple.Companion.vector
 import kotlin.math.abs
 

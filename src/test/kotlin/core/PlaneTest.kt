@@ -4,6 +4,8 @@ import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import scene.count
+import shape.Plane
 
 internal class PlaneTest {
     @Test

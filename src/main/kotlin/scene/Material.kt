@@ -1,6 +1,9 @@
-package core
+package scene
 
+import base.Pattern
 import core.Tuple.Companion.color
+import shape.Shape
+import core.Tuple
 import kotlin.math.pow
 
 data class Material(

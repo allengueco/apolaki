@@ -1,5 +1,7 @@
-package core
+package scene
 
+import core.Matrix
+import core.Ray
 import core.Tuple.Companion.point
 import kotlin.math.tan
 

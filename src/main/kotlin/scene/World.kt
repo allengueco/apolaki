@@ -1,7 +1,11 @@
-package core
+package scene
 
+import base.Intersect
+import core.*
 import core.Tuple.Companion.color
 import core.Tuple.Companion.point
+import shape.Shape
+import shape.Sphere
 
 class World(
     val light: Light? = Light(point(-10, 10, -10), color(1, 1, 1)),

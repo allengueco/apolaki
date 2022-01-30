@@ -1,5 +1,8 @@
-package core
+package patterns
 
+import base.Pattern
+import core.Color
+import core.Point
 import kotlin.math.floor
 
 class Checkers(val a: Color, val b: Color) : Pattern() {

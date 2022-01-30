@@ -1,5 +1,8 @@
-package core
+package patterns
 
+import base.Pattern
+import core.Color
+import core.Point
 import kotlin.math.floor
 import kotlin.math.pow
 import kotlin.math.sqrt

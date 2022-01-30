@@ -5,6 +5,8 @@ import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import scene.Camera
+import scene.World
 import kotlin.math.PI
 import kotlin.math.sqrt
 import kotlin.test.assertEquals

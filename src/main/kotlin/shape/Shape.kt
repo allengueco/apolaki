@@ -1,4 +1,11 @@
-package core
+package shape
+
+import base.Intersect
+import base.Normal
+import base.Transform
+import core.*
+import scene.Intersections
+import scene.Material
 
 abstract class Shape : Normal, Intersect, Transform() {
     var material = Material()

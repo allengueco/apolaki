@@ -5,6 +5,10 @@ import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import scene.Intersection
+import scene.count
+import scene.hit
+import shape.Sphere
 
 internal class IntersectionTest {
     /**

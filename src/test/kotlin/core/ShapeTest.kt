@@ -4,6 +4,9 @@ import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import shape.Shape
+import scene.Intersections
+import scene.Material
 import kotlin.math.PI
 import kotlin.math.sqrt
 

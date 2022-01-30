@@ -1,4 +1,8 @@
-package core
+package base
+
+import core.Color
+import core.Point
+import shape.Shape
 
 abstract class Pattern: Transform() {
     abstract fun color(point: Point, c1: Color, c2: Color): Color

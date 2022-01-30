@@ -1,11 +1,15 @@
 package core
 
+import patterns.Stripe
 import core.Tuple.Companion.color
 import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import scene.Light
+import scene.Material
+import shape.Sphere
 import kotlin.math.sqrt
 import kotlin.test.assertEquals
 

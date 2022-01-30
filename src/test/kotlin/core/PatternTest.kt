@@ -1,10 +1,16 @@
 package core
 
+import patterns.Checkers
+import patterns.Gradient
+import base.Pattern
+import patterns.Ring
+import patterns.Stripe
 import core.Tuple.Companion.color
 import core.Tuple.Companion.point
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import shape.Sphere
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class PatternTest {

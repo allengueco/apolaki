@@ -5,6 +5,12 @@ import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import scene.World
+import shape.Shape
+import scene.Intersection
+import scene.Light
+import scene.count
+import shape.Sphere
 
 internal class WorldTest {
     @Test

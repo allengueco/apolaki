@@ -1,6 +1,9 @@
-package core
+package shape
 
+import core.*
 import core.Tuple.Companion.point
+import scene.Intersection
+import scene.Intersections
 import kotlin.math.pow
 import kotlin.math.sqrt
 

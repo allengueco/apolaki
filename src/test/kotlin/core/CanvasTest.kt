@@ -4,6 +4,7 @@ import core.Tuple.Companion.color
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
+import scene.Canvas
 import kotlin.test.assertEquals
 
 internal class CanvasTest {

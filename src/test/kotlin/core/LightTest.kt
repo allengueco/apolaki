@@ -4,6 +4,7 @@ import core.Tuple.Companion.color
 import core.Tuple.Companion.point
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
+import scene.Light
 
 internal class LightTest {
     @Test

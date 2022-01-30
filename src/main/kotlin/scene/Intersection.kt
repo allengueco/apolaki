@@ -1,6 +1,10 @@
-package core
+package scene
 
 import Utils.Companion.EPSILON
+import shape.Shape
+import core.Point
+import core.Ray
+import core.Vector
 
 class Intersection(val t: Number, val obj: Shape) {
     fun compute(r: Ray) = Computation(this, r)

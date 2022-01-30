@@ -1,5 +1,6 @@
-package core
+package scene
 
+import core.Tuple
 import core.Tuple.Companion.color
 import java.io.File
 

@@ -2,6 +2,10 @@ import core.*
 import core.Tuple.Companion.color
 import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
+import shape.Plane
+import shape.Shape
+import scene.*
+import shape.Sphere
 import kotlin.math.PI
 
 fun main(args: Array<String>) {
