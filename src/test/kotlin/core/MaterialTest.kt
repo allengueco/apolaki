@@ -119,4 +119,11 @@ internal class MaterialTest {
         assertEquals(color(1, 1, 1), c1)
         assertEquals(color(0, 0, 0), c2)
     }
+
+    @Test
+    fun `Reflectivity for the default material`() {
+        val m = Material()
+
+        assertEquals(0.0, m.reflective)
+    }
 }
