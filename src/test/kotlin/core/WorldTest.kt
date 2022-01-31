@@ -222,4 +222,40 @@ internal class WorldTest {
 
         assertEquals(color(0.87677, 0.92436, 0.82918), color)
     }
+
+    @Test
+    fun `color_at() with mutually reflective surfaces`() {
+        val w = World(
+            light = Light(point(0, 0, 0), color(1, 1, 1))
+        )
+
+        val lower = Plane().apply {
+            material.reflective = 1
+            transform = transform.translate(0, -1, 0)
+        }
+        val upper = Plane().apply {
+            material.reflective = 1
+            transform = transform.translate(0, 1, 0)
+        }
+        w.objects.addAll(listOf(lower, upper))
+        val r = Ray(point(0, 0, 0), vector(0, 1, 0))
+
+        assertDoesNotThrow { w.color(r) }
+    }
+
+    @Test
+    fun `The reflected color at the maximum recursive depth`() {
+        val w = World()
+        val shape = Plane().apply {
+            material.reflective = 0.5
+            transform = transform.translate(0, -1, 0)
+        }.also { w.objects.add(it) }
+        val r = Ray(point(0, 0, -3), vector(0, -sqrt(2.0)/2, sqrt(2.0)/2))
+        val i = Intersection(sqrt(2.0), shape)
+
+        val comps = i.compute(r)
+        val color = w.reflectedColor(comps, 0)
+
+        assertEquals(color(0, 0, 0), color)
+    }
 }

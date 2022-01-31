@@ -9,40 +9,35 @@ import shape.Sphere
 
 class World(
     val light: Light? = Light(point(-10, 10, -10), color(1, 1, 1)),
-    val objects: MutableList<Shape> = mutableListOf(
-        Sphere().apply {
-            material.color = color(0.8, 1.0, 0.6)
-            material.diffuse = 0.7
-            material.specular = 0.2
-        },
-        Sphere().apply {
-            transform = transform.scale(0.5, 0.5, 0.5)
-        }
-    ),
+    val objects: MutableList<Shape> = mutableListOf(Sphere().apply {
+        material.color = color(0.8, 1.0, 0.6)
+        material.diffuse = 0.7
+        material.specular = 0.2
+    }, Sphere().apply {
+        transform = transform.scale(0.5, 0.5, 0.5)
+    }),
 ) : Intersect {
     val empty: Boolean by lazy { objects.isEmpty() }
 
     override fun intersect(ray: Ray): Intersections? {
-        val intersections = objects.mapNotNull { it.intersect(ray) }
-            .flatten()
-            .sortedBy { it.t.toDouble() }
+        val intersections = objects.mapNotNull { it.intersect(ray) }.flatten().sortedBy { it.t.toDouble() }
 
 
         return intersections.ifEmpty { null }
     }
 
     companion object {
+        const val MAX_RECURSIVE_DEPTH: Int = 5
         fun empty() = World(null, mutableListOf())
     }
 
-    fun shade(comps: Computation): Color {
+    fun shade(comps: Computation, depth: Int = MAX_RECURSIVE_DEPTH): Color {
         return if (light != null) {
             val isShadowed = isShadowed(comps.overPoint)
-            val surface = comps.intersection
-                .obj
-                .material
-                .lighting(light, comps.intersection.obj, comps.point, comps.eyeVector, comps.normalVector, isShadowed)
-            val reflected = reflectedColor(comps)
+            val surface = comps.intersection.obj.material.lighting(
+                light, comps.intersection.obj, comps.point, comps.eyeVector, comps.normalVector, isShadowed
+            )
+            val reflected = reflectedColor(comps, depth)
             surface + reflected
         } else {
             color(0, 0, 0) // shade black if empty? idk if right
@@ -50,11 +45,8 @@ class World(
     }
 
     operator fun contains(obj: Shape) = obj in objects
-    fun color(r: Ray) = intersect(r)
-        ?.hit()
-        ?.compute(r)
-        ?.let { shade(it) }
-        ?: color(0, 0, 0)
+    fun color(r: Ray, depth: Int = MAX_RECURSIVE_DEPTH) =
+        intersect(r)?.hit()?.compute(r)?.let { shade(it, depth) } ?: color(0, 0, 0)
 
     fun render(camera: Camera): Canvas {
         val image = Canvas(camera.hSize, camera.vSize)
@@ -90,13 +82,13 @@ class World(
         }
     }
 
-    fun reflectedColor(comps: Computation): Color {
-        if (comps.intersection.obj.material.reflective == 0.0) {
-            return color(0, 0, 0)
-        }
+    fun reflectedColor(comps: Computation, depth: Int = MAX_RECURSIVE_DEPTH): Color {
+        if (depth <= 0) return color(0, 0, 0)
+        if (comps.intersection.obj.material.reflective == 0.0) return color(0, 0, 0)
+
 
         val reflectedRay = Ray(comps.overPoint, comps.reflectVector)
-        val color = color(reflectedRay)
+        val color = color(reflectedRay, depth - 1)
 
         return color * comps.intersection.obj.material.reflective.toDouble()
     }
