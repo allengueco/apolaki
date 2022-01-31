@@ -91,6 +91,11 @@ class World(
     fun reflectedColor(comps: Computation): Color {
         if (comps.intersection.obj.material.reflective == 0.0) {
             return color(0, 0, 0)
-        } else { TODO() }
+        }
+
+        val reflectedRay = Ray(comps.overPoint, comps.reflectVector)
+        val color = color(reflectedRay)
+
+        return color * comps.intersection.obj.material.reflective.toDouble()
     }
 }
