@@ -49,4 +49,11 @@ class Sphere : Shape() {
         result = 31 * result + transform.hashCode()
         return result
     }
+
+    companion object {
+        fun glass() = Sphere().apply {
+            material.transparency = 1.0
+            material.refractiveIndex = 1.5
+        }
+    }
 }

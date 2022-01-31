@@ -12,15 +12,11 @@ import kotlin.test.assertIs
 
 internal class SphereTest {
 
-    /**
-     * Helper method that must return a sphere that is unique each time
-     */
-    private fun sphere() = Sphere()
 
     @Test
     fun `A ray intersects a sphere at two points`() {
         val ray = Ray(point(0, 0, -5), vector(0, 0, 1))
-        val sphere = sphere()
+        val sphere = Sphere()
 
         val xs = sphere.localIntersect(ray)
 
@@ -34,7 +30,7 @@ internal class SphereTest {
     @Test
     fun `A ray intersects a sphere at a tangent`() {
         val ray = Ray(point(0, 1, -5), vector(0, 0, 1))
-        val sphere = sphere()
+        val sphere = Sphere()
 
         val xs = sphere.localIntersect(ray)
 
@@ -49,7 +45,7 @@ internal class SphereTest {
     @Test
     fun `A ray misses a sphere`() {
         val ray = Ray(point(0, 2, -5), vector(0, 0, 1))
-        val sphere = sphere()
+        val sphere = Sphere()
 
         val xs = sphere.localIntersect(ray)
 
@@ -59,7 +55,7 @@ internal class SphereTest {
     @Test
     fun `A ray originates inside a sphere`() {
         val ray = Ray(point(0, 0, 0), vector(0, 0, 1))
-        val sphere = sphere()
+        val sphere = Sphere()
 
         val xs = sphere.localIntersect(ray)
 
@@ -74,7 +70,7 @@ internal class SphereTest {
     @Test
     fun `A sphere is behind a ray`() {
         val ray = Ray(point(0, 0, 5), vector(0, 0, 1))
-        val sphere = sphere()
+        val sphere = Sphere()
 
         val xs = sphere.localIntersect(ray)
 
@@ -88,7 +84,7 @@ internal class SphereTest {
 
     @Test
     fun `The localNormal on a sphere at a point on the x axis`() {
-        val s = sphere()
+        val s = Sphere()
 
         val n = s.localNormal(point(1, 0, 0))
 
@@ -97,7 +93,7 @@ internal class SphereTest {
 
     @Test
     fun `The localNormal on a sphere at a point on the y axis`() {
-        val s = sphere()
+        val s = Sphere()
 
         val n = s.localNormal(point(0, 1, 0))
 
@@ -106,7 +102,7 @@ internal class SphereTest {
 
     @Test
     fun `The localNormal on a sphere at a point on the z axis`() {
-        val s = sphere()
+        val s = Sphere()
 
         val n = s.localNormal(point(0, 0, 1))
 
@@ -115,7 +111,7 @@ internal class SphereTest {
 
     @Test
     fun `The localNormal on a sphere at a nonaxial point`() {
-        val s = sphere()
+        val s = Sphere()
 
         val n = s.localNormal(point(sqrt(3.0)/3, sqrt(3.0)/3, sqrt(3.0)/3))
 
@@ -124,7 +120,7 @@ internal class SphereTest {
 
     @Test
     fun `The localNormal is a normalized vector`() {
-        val s = sphere()
+        val s = Sphere()
 
         val n = s.localNormal(point(sqrt(3.0)/3, sqrt(3.0)/3, sqrt(3.0)/3))
 
@@ -133,6 +129,17 @@ internal class SphereTest {
 
     @Test
     fun `A Sphere is a Shape`() {
-        assertIs<Shape>(sphere(), "A Sphere is a Shape")
+        assertIs<Shape>(Sphere(), "A Sphere is a Shape")
+    }
+
+    @Test
+    fun `A helper for producing a sphere with a glassy material`() {
+        val s = Sphere.glass()
+
+        assertAll(
+            { assertEquals(Matrix.identity(), s.transform) },
+            { assertEquals(1.0, s.material.transparency) },
+            { assertEquals(1.5, s.material.refractiveIndex) }
+        )
     }
 }
