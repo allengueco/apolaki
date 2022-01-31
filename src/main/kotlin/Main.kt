@@ -379,8 +379,8 @@ fun `Putting It Together Ch9`() {
 
 fun `Putting It Together Ch10`() {
     val floor = Plane().apply {
-        material.pattern = Radial(color(1,0, 0), color(0, 1, 0)).apply {
-            transform = transform.scale(3, 3, 3)
+        material.pattern = Checkers(color(1,1, 1), color(0, 0, 0)).apply {
+            transform = transform.scale(0.5, 0.5, 0.5)
         }
     }
 
