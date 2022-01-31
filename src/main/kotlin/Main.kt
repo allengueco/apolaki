@@ -2,6 +2,7 @@ import core.*
 import core.Tuple.Companion.color
 import core.Tuple.Companion.point
 import core.Tuple.Companion.vector
+import patterns.*
 import shape.Plane
 import shape.Shape
 import scene.*
@@ -9,7 +10,7 @@ import shape.Sphere
 import kotlin.math.PI
 
 fun main(args: Array<String>) {
-    `Putting It Together Ch9`()
+    `Putting It Together Ch10`()
 }
 
 fun `Putting It Together Ch1`() {
@@ -374,4 +375,63 @@ fun `Putting It Together Ch9`() {
     }
 
     world.render(camera).also { it.saveCanvasToFile("pit_ch9_backdrop.ppm") }
+}
+
+fun `Putting It Together Ch10`() {
+    val floor = Plane().apply {
+        material.pattern = Radial(color(1,0, 0), color(0, 1, 0)).apply {
+            transform = transform.scale(3, 3, 3)
+        }
+    }
+
+    val middle = Sphere().apply {
+        transform = transform.translate(-0.5, 1, 0.5)
+        material = Material().apply {
+            color = color(0.1, 1, 0.5)
+            diffuse = 0.7
+            specular = 0.3
+            pattern = Checkers(color(1,0, 0), color(0, 1, 0)).apply {
+                transform = transform.scale(0.5, 0.5, 0.5)
+            }
+        }
+    }
+
+    val right = Sphere().apply {
+        transform =
+            Matrix.translation(1.5, 0.5, -0.5) *
+                    Matrix.scaling(0.5, 0.5, 0.5)
+        material = Material().apply {
+            color = color(0.5, 1, 0.1)
+            diffuse = 0.7
+            specular = 0.3
+            pattern = Radial(color(1,0, 0), color(0, 1, 0))
+        }
+    }
+
+    val left = Sphere().apply {
+        transform = Matrix.translation(-1.5, 0.33, -0.75) *
+                Matrix.scaling(.33, 0.33, 0.33)
+        material = Material().apply {
+            color = color(1, 0.8, 0.1)
+            diffuse = 0.7
+            specular = 0.3
+        }
+    }
+
+    val objects = mutableListOf(
+        floor, left, right, middle
+    )
+    val world = World(
+        light = Light(point(-10, 10, -10), color(1, 1, 1)),
+        objects = objects
+    )
+
+    val camera = Camera(300, 150, PI / 5).apply {
+        transform = Matrix.view(
+            from = point(0, 2.5, -10.50),
+            to = point(0, 1, 0),
+            up = vector(0, 1, 0))
+    }
+
+    world.render(camera).also { it.saveCanvasToFile("pit_ch10.ppm") }
 }

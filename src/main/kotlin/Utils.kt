@@ -2,7 +2,7 @@ import kotlin.math.abs
 
 class Utils {
     companion object {
-        val EPSILON: Double = 0.0001
+        const val EPSILON: Double = 0.0001
         /**
          * Need this to mitigate floating point errors
          */

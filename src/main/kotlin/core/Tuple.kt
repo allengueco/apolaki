@@ -25,7 +25,7 @@ data class Tuple(
 
         fun vector(x: Number, y: Number, z: Number) = Tuple(x.toDouble(), y.toDouble(), z.toDouble(), 0.0)
 
-        fun color(x: Number, y: Number, z: Number) = vector(x, y, z) // default to the w component to be 0 (a vector)
+        fun color(red: Number, blue: Number, green: Number) = vector(red, blue, green) // default to the w component to be 0 (a vector)
 
     }
 
