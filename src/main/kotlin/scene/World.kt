@@ -87,4 +87,10 @@ class World(
             (hit != null && hit.t.toDouble() < distance)
         }
     }
+
+    fun reflectedColor(comps: Computation): Color {
+        if (comps.intersection.obj.material.reflective == 0.0) {
+            return color(0, 0, 0)
+        } else { TODO() }
+    }
 }

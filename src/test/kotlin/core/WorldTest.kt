@@ -173,4 +173,19 @@ internal class WorldTest {
 
         assertEquals(color(0.1, 0.1, 0.1), c)
     }
+
+    @Test
+    fun `The reflected color for a nonreflective material`() {
+        val w = World()
+        val r = Ray(point(0, 0, 0), vector(0, 0, 1))
+        val shape = w.objects[1].apply {
+            material.ambient = 1.0
+        }
+        val i = Intersection(1.0, shape)
+
+        val comps = i.compute(r)
+        val color = w.reflectedColor(comps)
+
+        assertEquals(color(0, 0, 0), color)
+    }
 }
