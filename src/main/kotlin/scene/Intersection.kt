@@ -14,6 +14,7 @@ data class Computation(
     val intersection: Intersection,
     val ray: Ray
 ) {
+    val reflectVector: Vector
     val point: Point = ray.at(intersection.t)
     val eyeVector: Vector = -ray.dir
     val normalVector: Vector
@@ -32,6 +33,7 @@ data class Computation(
         }
 
         overPoint = point + normalVector * EPSILON
+        reflectVector = ray.dir.reflect(normalVector)
     }
 }
 

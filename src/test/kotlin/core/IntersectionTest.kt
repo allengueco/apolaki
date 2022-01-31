@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test
 import scene.Intersection
 import scene.count
 import scene.hit
+import shape.Plane
 import shape.Sphere
+import kotlin.math.sqrt
 
 internal class IntersectionTest {
     /**
@@ -150,4 +152,20 @@ internal class IntersectionTest {
             { assertTrue(comps.point.z > comps.overPoint.z) }
         )
     }
+
+    @Test
+    fun `Precomputing the reflection vector`() {
+        val shape = Plane()
+        val r = Ray(point(0, 1, -1), vector(0, -sqrt(2.0)/2, sqrt(2.0)/2))
+        val i = Intersection(sqrt(2.0), shape)
+
+        val comps = i.compute(r)
+
+        assertEquals(vector(0, sqrt(2.0)/2, sqrt(2.0)/2), comps.reflectVector)
+    }
+
+
+
 }
+
+
