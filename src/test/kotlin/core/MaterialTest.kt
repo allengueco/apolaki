@@ -126,4 +126,12 @@ internal class MaterialTest {
 
         assertEquals(0.0, m.reflective)
     }
+
+    @Test
+    fun `Transparency and Refractive Index for the default material`() {
+        val m = Material()
+
+        assertEquals(0.0, m.transparency)
+        assertEquals(1.0, m.refractiveIndex)
+    }
 }

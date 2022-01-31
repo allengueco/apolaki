@@ -13,7 +13,9 @@ data class Material(
     var specular: Number = 0.9,
     var shininess: Number = 200.0,
     var pattern: Pattern? = null,
-    var reflective: Number = 0.0
+    var reflective: Number = 0.0,
+    var transparency: Number = 0.0,
+    var refractiveIndex: Number = 1.0,
 ) {
     fun lighting(
         light: Light,
