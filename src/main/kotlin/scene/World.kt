@@ -38,12 +38,14 @@ class World(
     fun shade(comps: Computation): Color {
         return if (light != null) {
             val isShadowed = isShadowed(comps.overPoint)
-            comps.intersection
+            val surface = comps.intersection
                 .obj
                 .material
                 .lighting(light, comps.intersection.obj, comps.point, comps.eyeVector, comps.normalVector, isShadowed)
+            val reflected = reflectedColor(comps)
+            surface + reflected
         } else {
-            color(0.5, 0.5, 0.5) // shade black if empty? idk if right
+            color(0, 0, 0) // shade black if empty? idk if right
         }
     }
 
@@ -57,8 +59,8 @@ class World(
     fun render(camera: Camera): Canvas {
         val image = Canvas(camera.hSize, camera.vSize)
 
-        (0 until camera.vSize). forEach { y ->
-            (0 until camera.hSize). forEach { x ->
+        (0 until camera.vSize).forEach { y ->
+            (0 until camera.hSize).forEach { x ->
                 val r = camera.cast(x, y)
                 val color = color(r)
                 image[x, y] = color

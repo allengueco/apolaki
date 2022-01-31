@@ -207,4 +207,19 @@ internal class WorldTest {
 
         assertEquals(color(0.19032, 0.2379, 0.14274), color)
     }
+    @Test
+    fun `shade_hit() with a reflective material`() {
+        val w = World()
+        val shape = Plane().apply {
+            material.reflective = 0.5
+            transform = transform.translate(0, -1, 0)
+        }.also { w.objects.add(it) }
+        val r = Ray(point(0, 0, -3), vector(0, -sqrt(2.0)/2, sqrt(2.0)/2))
+        val i = Intersection(sqrt(2.0), shape)
+
+        val comps = i.compute(r)
+        val color = w.shade(comps)
+
+        assertEquals(color(0.87677, 0.92436, 0.82918), color)
+    }
 }
