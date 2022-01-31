@@ -164,7 +164,32 @@ internal class IntersectionTest {
         assertEquals(vector(0, sqrt(2.0)/2, sqrt(2.0)/2), comps.reflectVector)
     }
 
+    companion object IntersectionsParameters {
+        @JvmStatic
+        fun intersectionArgs(): List<Arguments> {
+            Stream.of(
+                Arguments
+            )
+        }
+    }
 
+    @Test
+    fun `Finding n1 and n2 at various intersections`() {
+        val a = Sphere.glass().apply {
+            transform = transform.scale(2, 2, 2)
+            material.refractiveIndex = 1.5
+        }
+        val b = Sphere.glass().apply {
+            transform = transform.translate(0, 0, -0.25)
+            material.refractiveIndex = 2.0
+        }
+        val c = Sphere.glass().apply {
+            transform = transform.translate(0, 0, 0.25)
+            material.refractiveIndex = 2.5
+        }
+        val r = Ray(point(0, 0, -4), vector(0, 0, 1))
+        val xs =
+    }
 
 }
 
